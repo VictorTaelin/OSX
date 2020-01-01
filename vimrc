@@ -61,6 +61,8 @@ set foldtext=NeatFoldText()
 hi Folded ctermbg=231 ctermfg=2
 hi FoldColumn ctermbg=white ctermfg=darkred
 
+set ruler
+set colorcolumn=60
 set ttyfast
 set ttyscroll=3
 set lazyredraw
@@ -93,7 +95,7 @@ set viminfo='1000,f1,<500,:100,/100,h  "
 set shortmess=atl " no annoying start screen
 set linebreak
 set nolist  " list disables linebreak
-set textwidth=0
+set textwidth=60
 set wrapmargin=0
 
 " CtrlP stuff
@@ -123,19 +125,23 @@ let g:ctrlp_by_filename = 0
     \ &ft=='purescript' ? ':!pulp run <cr>' :
     \ &ft=='dvl'        ? ':!dvl run %<cr>' :
     \ &ft=='lambda'     ? ':!time absal -b -s %<cr>' :
-    \ &ft=='javascript' ? ':!time node --expose-wasm %<cr>' :
+    \ &ft=='javascript' ? ':!time node --stack-size=9999999 --max-old-space-size=8192 --expose-wasm %<cr>' :
+    \ &ft=='typescript' ? ':!time ts-node %<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='escoc'      ? ':!time escoc %:r<cr>' :
-    \ &ft=='formality'  ? ':!time formality %:r<cr>' :
+    \ &ft=='eatt'       ? ':!time eatt -itneTNRx %:r<cr>' :
+    \ &ft=='eac'        ? ':!time eac %:r<cr>' :
+    \ &ft=='formality'  ? ':!time fm -d %:r/main<cr>' :
+    \ &ft=='fmc'        ? ':!time fmc %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
     \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='c'          ? ':!clang -O2 -L/System/Library/Frameworks -Wall % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='agda'       ? ':!agda %<cr>' :
+    \ &ft=='cuda'       ? ':!scp % victu:~/cuda<CR>:!ssh victu /usr/local/cuda/bin/nvcc -O3 /home/v/cuda/% -o /home/v/cuda/%:r<CR>:!ssh victu time /home/v/cuda/%:r<cr>' :
+    \ &ft=='cpp'        ? ':!clang++ -std=c++11 -O3 % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='agda'       ? ':!agda -i src %<cr>' :
     \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
     \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
     \ ':!time cc %<cr>')
@@ -158,8 +164,12 @@ let g:ctrlp_by_filename = 0
     \ &ft=='dvl'        ? ':!dvl run %<cr>' :
     \ &ft=='lambda'     ? ':!time absal -s %<cr>' :
     \ &ft=='javascript' ? ':!npm run build<cr>' :
+    \ &ft=='typescript' ? ':!npm run build<cr>' :
     \ &ft=='html'       ? ':!npm run build<cr>' :
-    \ &ft=='formality'  ? ':!time formality %:r<cr>' :
+    \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
+    \ &ft=='formality'  ? ':!time fm -o %:r/main<cr>' :
+    \ &ft=='eac'        ? ':!time eac %:r<cr>' :
+    \ &ft=='fmc'        ? ':!time fmc -l %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
@@ -169,10 +179,125 @@ let g:ctrlp_by_filename = 0
     \ &ft=='c'          ? ':!clang -O2 -L/System/Library/Frameworks -Wall % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='agda'       ? ':!agda %<cr>' :
+    \ &ft=='agda'       ? ':!agda -i src %<cr>' :
     \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
     \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
     \ ':!time cc %<cr>')
+
+:nnoremap <expr> <leader>r ':!clear<cr>:w!<cr>'.(
+    \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
+    \ expand('%:t')=='test.js' ? ':!mocha<cr>' :
+    \ &ft=='caramel'    ? ':!time mel main<cr>' :
+    \ &ft=='ocaml'      ? ':!ocamlc -o %:r %<cr>:!./%:r<cr>' :
+    \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
+    \ &ft=='python'     ? ':!time python %<cr>' :
+    \ &ft=='coc'        ? ':!time (coc type %:r; coc norm %:r)<cr>' :
+    \ &ft=='scheme'     ? ':!csc %<cr>:!time ./%:r<cr>' :
+    \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
+    \ &ft=='racket'     ? ':!racket %<cr>' :
+    \ &ft=='haskell'    ? ':!stack run<cr>' :
+    \ &ft=='rust'       ? ':!time cargo +nightly run --release<cr>' :
+    \ &ft=='go'         ? ':!time go run %<cr>' :
+    \ &ft=='purescript' ? ':!pulp run <cr>' :
+    \ &ft=='dvl'        ? ':!dvl run %<cr>' :
+    \ &ft=='lambda'     ? ':!time absal -s %<cr>' :
+    \ &ft=='javascript' ? ':!npm run build<cr>' :
+    \ &ft=='typescript' ? ':!npm run build<cr>' :
+    \ &ft=='html'       ? ':!npm run build<cr>' :
+    \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
+    \ &ft=='formality'  ? ':!time fm -t %:r/main<cr>' :
+    \ &ft=='fmc'        ? ':!time fmc -t %:r<cr>' :
+    \ &ft=='eac'        ? ':!time eac %:r<cr>' :
+    \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
+    \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
+    \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
+    \ &ft=='swift'      ? ':!time swift %<cr>' :
+    \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
+    \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='c'          ? ':!clang -O2 -L/System/Library/Frameworks -Wall % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='agda'       ? ':!agda -i src %<cr>' :
+    \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
+    \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
+    \ ':!time cc %<cr>')
+
+:nnoremap <expr> <leader>R ':!clear<cr>:w!<cr>'.(
+    \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
+    \ expand('%:t')=='test.js' ? ':!mocha<cr>' :
+    \ &ft=='caramel'    ? ':!time mel main<cr>' :
+    \ &ft=='ocaml'      ? ':!ocamlc -o %:r %<cr>:!./%:r<cr>' :
+    \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
+    \ &ft=='python'     ? ':!time python %<cr>' :
+    \ &ft=='coc'        ? ':!time (coc type %:r; coc norm %:r)<cr>' :
+    \ &ft=='scheme'     ? ':!csc %<cr>:!time ./%:r<cr>' :
+    \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
+    \ &ft=='racket'     ? ':!racket %<cr>' :
+    \ &ft=='haskell'    ? ':!stack run<cr>' :
+    \ &ft=='rust'       ? ':!time cargo +nightly run --release<cr>' :
+    \ &ft=='go'         ? ':!time go run %<cr>' :
+    \ &ft=='purescript' ? ':!pulp run <cr>' :
+    \ &ft=='dvl'        ? ':!dvl run %<cr>' :
+    \ &ft=='lambda'     ? ':!time absal -s %<cr>' :
+    \ &ft=='javascript' ? ':!npm run build<cr>' :
+    \ &ft=='typescript' ? ':!npm run build<cr>' :
+    \ &ft=='html'       ? ':!npm run build<cr>' :
+    \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
+    \ &ft=='formality'  ? ':!time fm -t %:r/@<cr>' :
+    \ &ft=='fmc'        ? ':!time fmc -t %:r<cr>' :
+    \ &ft=='eac'        ? ':!time eac %:r<cr>' :
+    \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
+    \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
+    \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
+    \ &ft=='swift'      ? ':!time swift %<cr>' :
+    \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
+    \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='c'          ? ':!clang -O2 -L/System/Library/Frameworks -Wall % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='agda'       ? ':!agda -i src %<cr>' :
+    \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
+    \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
+    \ ':!time cc %<cr>')
+
+:nnoremap <expr> <leader>m ':!clear<cr>:w!<cr>'.(
+    \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
+    \ expand('%:t')=='test.js' ? ':!mocha<cr>' :
+    \ &ft=='caramel'    ? ':!time mel main<cr>' :
+    \ &ft=='ocaml'      ? ':!ocamlc -o %:r %<cr>:!./%:r<cr>' :
+    \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
+    \ &ft=='python'     ? ':!time python %<cr>' :
+    \ &ft=='coc'        ? ':!time (coc type %:r; coc norm %:r)<cr>' :
+    \ &ft=='scheme'     ? ':!csc %<cr>:!time ./%:r<cr>' :
+    \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
+    \ &ft=='racket'     ? ':!racket %<cr>' :
+    \ &ft=='haskell'    ? ':!stack run<cr>' :
+    \ &ft=='rust'       ? ':!time cargo +nightly run --release<cr>' :
+    \ &ft=='go'         ? ':!time go run %<cr>' :
+    \ &ft=='purescript' ? ':!pulp run <cr>' :
+    \ &ft=='dvl'        ? ':!dvl run %<cr>' :
+    \ &ft=='lambda'     ? ':!time absal -s %<cr>' :
+    \ &ft=='javascript' ? ':!npm run build<cr>' :
+    \ &ft=='typescript' ? ':!npm run build<cr>' :
+    \ &ft=='html'       ? ':!npm run build<cr>' :
+    \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
+    \ &ft=='formality'  ? ':!time fm -S %:r<cr>' :
+    \ &ft=='fmc'        ? ':!time fmc -t %:r<cr>' :
+    \ &ft=='eac'        ? ':!time eac %:r<cr>' :
+    \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
+    \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
+    \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
+    \ &ft=='swift'      ? ':!time swift %<cr>' :
+    \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
+    \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='c'          ? ':!clang -O2 -L/System/Library/Frameworks -Wall % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='agda'       ? ':!agda -i src %<cr>' :
+    \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
+    \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
+    \ ':!time cc %<cr>')
+
 :nnoremap <expr> <leader>w ':w!<cr>:!clear; npm run build<cr>:!osascript ~/dev/me/refresh_chrome.applescript &<cr>'
 :nnoremap <expr> <leader>p ':w!<cr>:!clear; npm run publish<cr>'
 
@@ -319,15 +444,23 @@ au BufNewFile,BufRead *.dvl set filetype=dvl
 au BufNewFile,BufRead *.lis set filetype=lispell
 au BufNewFile,BufRead *.lscm set filetype=lispell
 au BufNewFile,BufRead *.sol set filetype=solidity
+au BufNewFile,BufRead *.eatt set filetype=eatt
+au BufNewFile,BufRead *.eatt set syntax=javascript
 au BufNewFile,BufRead *.fm set filetype=formality
 au BufNewFile,BufRead *.fm set syntax=javascript
+au BufNewFile,BufRead *.ifm set filetype=informality
+au BufNewFile,BufRead *.ifm set syntax=javascript
+au BufNewFile,BufRead *.eac set filetype=eac
+au BufNewFile,BufRead *.eac set syntax=javascript
+au BufNewFile,BufRead *.fmc set filetype=fmc
+au BufNewFile,BufRead *.fmc set syntax=javascript
 filetype plugin on
 
 "filetype on
 "filetype plugin indent on
 
 " C++11 syntax
-au BufNewFile,BufRead *.cpp set syntax=cpp11
+"au BufNewFile,BufRead *.cpp set syntax=cpp11
 
 " More fold stuff
 :nnoremap + zr:echo 'foldlevel: ' . &foldlevel<cr>
@@ -402,16 +535,16 @@ set runtimepath^=~/.vim/bundle/ag
 
 
 " purescript
-:map <leader>mt :PSCIDEtype<CR>
-:map <leader>mi :PSCIDEimportIdentifier<CR>
-:map <leader>mat :PSCIDEaddTypeAnnotation<CR>
-:map <leader>mai :PSCIDEaddImportQualifications<CR>
-:map <leader>mri :PSCIDEremoveImportQualifications<CR>
-:map <leader>ms :PSCIDEapplySuggestion<CR>
-:map <leader>mc :PSCIDEcaseSplit<CR>
-:map <leader>mp :PSCIDEpursuit<CR>
-:map <leader>mr :PSCIDEload<CR>
-:map <leader>mf :PSCIDEaddClause<CR>
+":map <leader>mt :PSCIDEtype<CR>
+":map <leader>mi :PSCIDEimportIdentifier<CR>
+":map <leader>mat :PSCIDEaddTypeAnnotation<CR>
+":map <leader>mai :PSCIDEaddImportQualifications<CR>
+":map <leader>mri :PSCIDEremoveImportQualifications<CR>
+":map <leader>ms :PSCIDEapplySuggestion<CR>
+":map <leader>mc :PSCIDEcaseSplit<CR>
+":map <leader>mp :PSCIDEpursuit<CR>
+":map <leader>mr :PSCIDEload<CR>
+":map <leader>mf :PSCIDEaddClause<CR>
 
 
 " https://gist.github.com/bignimbus/1da46a18416da4119778
