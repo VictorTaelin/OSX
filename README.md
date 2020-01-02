@@ -14,3 +14,5 @@ enter `shell:startup` and move them there.
 - Mac Left-Command = Windows Left-Ctrl
 - Mac Left-Option = Windows Left-Alt
 - Mac Right-Command = Windows Win
+
+//test
