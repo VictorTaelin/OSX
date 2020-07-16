@@ -62,12 +62,12 @@ hi Folded ctermbg=231 ctermfg=2
 hi FoldColumn ctermbg=white ctermfg=darkred
 
 set ruler
-set colorcolumn=60
+set colorcolumn=80
 set ttyfast
 set ttyscroll=3
 set lazyredraw
 set hidden
-set nowrap
+set wrap
 set autoread
 "set smartindent
 set tabstop=2                            " a tab is four spaces
@@ -95,7 +95,7 @@ set viminfo='1000,f1,<500,:100,/100,h  "
 set shortmess=atl " no annoying start screen
 set linebreak
 set nolist  " list disables linebreak
-set textwidth=60
+set textwidth=80
 set wrapmargin=0
 
 " CtrlP stuff
@@ -124,15 +124,16 @@ let g:ctrlp_by_filename = 0
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
     \ &ft=='dvl'        ? ':!dvl run %<cr>' :
-    \ &ft=='lambda'     ? ':!time absal -b -s %<cr>' :
-    \ &ft=='javascript' ? ':!time node --stack-size=9999999 --max-old-space-size=8192 --expose-wasm %<cr>' :
+    \ &ft=='ultimate'   ? ':!time ult %<cr>' :
+    \ &ft=='lambda'     ? ':!time ult %<cr>' :
+    \ &ft=='javascript' ? ':!time node %<cr>' :
     \ &ft=='typescript' ? ':!time ts-node %<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='escoc'      ? ':!time escoc %:r<cr>' :
     \ &ft=='eatt'       ? ':!time eatt -itneTNRx %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fm -d %:r/main<cr>' :
-    \ &ft=='fmc'        ? ':!time fmc %:r<cr>' :
+    \ &ft=='formality'  ? ':!time fm %<cr>' :
+    \ &ft=='formcore'   ? ':!time fmc %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
@@ -167,9 +168,9 @@ let g:ctrlp_by_filename = 0
     \ &ft=='typescript' ? ':!npm run build<cr>' :
     \ &ft=='html'       ? ':!npm run build<cr>' :
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fm -o %:r/main<cr>' :
+    \ &ft=='formality'  ? ':!time fmio %:r;<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
-    \ &ft=='fmc'        ? ':!time fmc -l %:r<cr>' :
+    \ &ft=='formcore'   ? ':!time fmio %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
@@ -205,8 +206,8 @@ let g:ctrlp_by_filename = 0
     \ &ft=='typescript' ? ':!npm run build<cr>' :
     \ &ft=='html'       ? ':!npm run build<cr>' :
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fm -t %:r/main<cr>' :
-    \ &ft=='fmc'        ? ':!time fmc -t %:r<cr>' :
+    \ &ft=='formality'  ? ':!time fmcjs %:r<cr>' :
+    \ &ft=='formcore'   ? ':!time fmcjs %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
@@ -243,8 +244,8 @@ let g:ctrlp_by_filename = 0
     \ &ft=='typescript' ? ':!npm run build<cr>' :
     \ &ft=='html'       ? ':!npm run build<cr>' :
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fm -t %:r/@<cr>' :
-    \ &ft=='fmc'        ? ':!time fmc -t %:r<cr>' :
+    \ &ft=='formality'  ? ':!time fmcrun main<cr>' :
+    \ &ft=='formcore'   ? ':!time fmcrun main<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
@@ -260,54 +261,23 @@ let g:ctrlp_by_filename = 0
     \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
     \ ':!time cc %<cr>')
 
-:nnoremap <expr> <leader>m ':!clear<cr>:w!<cr>'.(
-    \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
-    \ expand('%:t')=='test.js' ? ':!mocha<cr>' :
-    \ &ft=='caramel'    ? ':!time mel main<cr>' :
-    \ &ft=='ocaml'      ? ':!ocamlc -o %:r %<cr>:!./%:r<cr>' :
-    \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
-    \ &ft=='python'     ? ':!time python %<cr>' :
-    \ &ft=='coc'        ? ':!time (coc type %:r; coc norm %:r)<cr>' :
-    \ &ft=='scheme'     ? ':!csc %<cr>:!time ./%:r<cr>' :
-    \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
-    \ &ft=='racket'     ? ':!racket %<cr>' :
-    \ &ft=='haskell'    ? ':!stack run<cr>' :
-    \ &ft=='rust'       ? ':!time cargo +nightly run --release<cr>' :
-    \ &ft=='go'         ? ':!time go run %<cr>' :
-    \ &ft=='purescript' ? ':!pulp run <cr>' :
-    \ &ft=='dvl'        ? ':!dvl run %<cr>' :
-    \ &ft=='lambda'     ? ':!time absal -s %<cr>' :
-    \ &ft=='javascript' ? ':!npm run build<cr>' :
-    \ &ft=='typescript' ? ':!npm run build<cr>' :
-    \ &ft=='html'       ? ':!npm run build<cr>' :
-    \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fm -S %:r<cr>' :
-    \ &ft=='fmc'        ? ':!time fmc -t %:r<cr>' :
-    \ &ft=='eac'        ? ':!time eac %:r<cr>' :
-    \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
-    \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
-    \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
-    \ &ft=='swift'      ? ':!time swift %<cr>' :
-    \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
-    \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='c'          ? ':!clang -O2 -L/System/Library/Frameworks -Wall % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='agda'       ? ':!agda -i src %<cr>' :
-    \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
-    \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
-    \ ':!time cc %<cr>')
-
+:nnoremap <expr> <leader>m ':!clear<cr>:w!<cr>'
 :nnoremap <expr> <leader>w ':w!<cr>:!clear; npm run build<cr>:!osascript ~/dev/me/refresh_chrome.applescript &<cr>'
 :nnoremap <expr> <leader>p ':w!<cr>:!clear; npm run publish<cr>'
+:nnoremap <expr> <leader>x ':x!<cr>'
+:nnoremap <expr> <leader>q ':q!<cr>'
+":map <leader>q :xa!<cr>
+
 
 " NERDTree stuff
 :let NERDTreeIgnore = ['\.idr\~$','\.ibc$','\.min.js$','\.agdai','\.pyc$','\.hi$','\.o$','\.js_o$','\.js_hi$','\.dyn_o$','\.dyn_hi$','\.jsexe','.*dist\/.*','.*bin\/.*']
 :let NERDTreeChDirMode = 2
+:let NERDTreeWinSize = 20
+:let NERDTreeShowHidden=1
 :nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
 
 au VimEnter * NERDTree
-au VimEnter * set nu
+" au VimEnter * set nu "enable to always set nu
 au VimEnter * wincmd l
 
 :nmap <expr> <leader>t ":ClearCtrlPCache<cr>:NERDTree<cr>:set nu<cr><C-w>l"
@@ -390,7 +360,6 @@ augroup END
 ":nnoremap <C-i> <C-i>
 
 " quit
-:map <leader>q :xa!<cr>
 
 " navigates through marks (if exist), if not, moves fast
 :nnoremap <S-j> 6gj
@@ -434,6 +403,7 @@ au BufNewFile,BufRead *.moon set syntax=javascript
 au BufNewFile,BufRead *.mt set filetype=morte
 au BufNewFile,BufRead *.idr set filetype=idris
 au BufNewFile,BufRead *.coc set filetype=coc
+au BufNewFile,BufRead *.ult set filetype=ultimate
 au BufNewFile,BufRead *.lc set filetype=lambda
 au BufNewFile,BufRead *.lc set syntax=elm
 au BufNewFile,BufRead *.lam set filetype=lambda
@@ -452,7 +422,7 @@ au BufNewFile,BufRead *.ifm set filetype=informality
 au BufNewFile,BufRead *.ifm set syntax=javascript
 au BufNewFile,BufRead *.eac set filetype=eac
 au BufNewFile,BufRead *.eac set syntax=javascript
-au BufNewFile,BufRead *.fmc set filetype=fmc
+au BufNewFile,BufRead *.fmc set filetype=formcore
 au BufNewFile,BufRead *.fmc set syntax=javascript
 filetype plugin on
 
@@ -519,6 +489,7 @@ function! SetupCtrlP()
     augroup END
   endif
 endfunction
+
 if has("autocmd")
   autocmd VimEnter * :call SetupCtrlP()
 endif

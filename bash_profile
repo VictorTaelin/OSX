@@ -9,7 +9,7 @@ function base() {
 }
 
 export LSCOLORS=ExFxBxDxCxegedabagacad
-export PS1='\[\033[00;34m\]\w\[\033[00m\]: '
+export PS1='λ '
 export CLICOLOR=1
 
 alias ls='ls -GFhla'
@@ -26,3 +26,6 @@ export NVM_DIR="$HOME/.nvm"
 source /Users/v/.ghcup/env
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
+
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+
