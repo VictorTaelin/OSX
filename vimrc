@@ -347,14 +347,6 @@ hi VertSplit ctermfg=lightgray ctermbg=black
 :nnoremap q qa<esc>
 :nnoremap Q @a
 
-" vimrc autosave
-augroup myvimrc
-    au!
-    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so ~/.vim/.vimrc "$MYVIMRC
-augroup END
-"call pathogen#runtime_append_all_bundles()
-"call pathogen#helptags()
-
 " previous and next location
 :nnoremap <C-u> <C-o>
 ":nnoremap <C-i> <C-i>
@@ -442,9 +434,6 @@ filetype plugin on
 
 " relative lines on/off
 nnoremap <silent><leader>n :set relativenumber!<cr>
-
-:unmap <C-i>
-
 
 :set comments+=:--
 
