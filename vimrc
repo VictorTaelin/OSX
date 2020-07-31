@@ -92,7 +92,7 @@ set nobackup
 set noswapfile
 set nocompatible
 set viminfo='1000,f1,<500,:100,/100,h  "
-set shortmess=atl " no annoying start screen
+set shortmess=atql " no annoying start screen
 set linebreak
 set nolist  " list disables linebreak
 set textwidth=80
@@ -276,7 +276,8 @@ let g:ctrlp_by_filename = 0
 :let NERDTreeShowHidden=1
 :nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
 
-"au VimEnter * NERDTree
+:nmap <leader>n :NERDTree<CR>
+au VimEnter * NERDTree
 " au VimEnter * set nu "enable to always set nu
 au VimEnter * wincmd l
 
@@ -350,6 +351,7 @@ hi VertSplit ctermfg=lightgray ctermbg=black
 " previous and next location
 :nnoremap <C-u> <C-o>
 ":nnoremap <C-i> <C-i>
+":nnoremap <TAB> <C-i>
 
 " quit
 
@@ -368,8 +370,8 @@ hi VertSplit ctermfg=lightgray ctermbg=black
 " :inoremap <S-space> <tab>
 :nmap ( <<
 :nmap ) >>
-:nmap <tab> >>
-:nmap <S-tab> << 
+":nmap <tab> >>
+":nmap <S-tab> << 
 :map U <C-r>
 :nmap <C-j> <C-w>j
 ":nmap <C-k> <C-w>k
@@ -433,7 +435,7 @@ filetype plugin on
 :nnoremap <leader>a zC
 
 " relative lines on/off
-nnoremap <silent><leader>n :set relativenumber!<cr>
+"nnoremap <silent><leader>n :set relativenumber!<cr>
 
 :set comments+=:--
 

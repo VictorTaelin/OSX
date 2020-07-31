@@ -2,6 +2,9 @@ defaults write NSGlobalDomain KeyRepeat -int 1
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
 alias vim='/Applications/MacVim.app/Contents/bin/mvim -v'
+alias vifm='vifm .'
+alias lib="cd ~/vic/moonad/lib"
+alias fjs="cd ~/vic/formality/javascript"
 
 function base() {
   scp fpm:~/formality-package-manager/fm/Base#$1.fm .
@@ -9,7 +12,8 @@ function base() {
 }
 
 export LSCOLORS=ExFxBxDxCxegedabagacad
-export PS1='λ '
+#export PS1='λ '
+export PS1='[\w]\[\033[00m\] '
 export CLICOLOR=1
 
 alias ls='ls -GFhla'
