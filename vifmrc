@@ -3,8 +3,7 @@ nnoremap K 6k
 nnoremap ,m :q!<cr>
 nnoremap u h
 nnoremap o l
-view
-view
+set vifminfo+=tui
 
 
 " vim: filetype=vifm :

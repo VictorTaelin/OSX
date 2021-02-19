@@ -67,9 +67,10 @@ set ttyfast
 set ttyscroll=3
 set lazyredraw
 set hidden
-set wrap
+set nowrap
 set autoread
-"set smartindent
+"set nosmartindent                        " TODO: remove this line if things go wrong
+set nolisp                               " stops annoying auto-indenting on .scm file
 set tabstop=2                            " a tab is four spaces
 set expandtab                            "
 set backspace=indent,eol,start           " allow backspacing over everything in insert mode
@@ -116,24 +117,27 @@ let g:ctrlp_by_filename = 0
     \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
     \ &ft=='python'     ? ':!time python %<cr>' :
     \ &ft=='coc'        ? ':!time (coc type %:r; coc norm %:r)<cr>' :
-    \ &ft=='scheme'     ? ':!csc %<cr>:!time ./%:r<cr>' :
+    \ &ft=='scheme'     ? ':!time scheme --script %<cr>' :
     \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
     \ &ft=='racket'     ? ':!racket %<cr>' :
-    \ &ft=='haskell'    ? ':!runghc --ghc-arg=-freverse-errors %<cr>' :
-    \ &ft=='rust'       ? ':!time cargo +nightly run --release<cr>' :
+    \ &ft=='haskell'    ? ':!time runghc --ghc-arg=-freverse-errors %<cr>' :
+    "\ &ft=='haskell'    ? ':!stack runghc %<cr>' :
+    \ &ft=='rust'       ? ':!time cargo run<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
     \ &ft=='dvl'        ? ':!dvl run %<cr>' :
     \ &ft=='ultimate'   ? ':!time ult %<cr>' :
-    \ &ft=='lambda'     ? ':!time ult %<cr>' :
+    \ &ft=='lambda'     ? ':!time absal %<cr>' :
     \ &ft=='javascript' ? ':!time node %<cr>' :
     \ &ft=='typescript' ? ':!time ts-node %<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='escoc'      ? ':!time escoc %:r<cr>' :
     \ &ft=='eatt'       ? ':!time eatt -itneTNRx %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fm %<cr>' :
-    \ &ft=='formcore'   ? ':!time fmc %:r<cr>' :
+    \ &ft=='fmfm'       ? ':!time fmjs %<cr>' :
+    \ &ft=='formality'  ? ':!time fmjs %<cr>' :
+    \ &ft=='formcore'   ? ':!time fmc %<cr>' :
+    \ &ft=='kind'       ? ':!time kind %<cr>' :
     \ &ft=='sic'        ? ':!time sic -s %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
@@ -158,7 +162,8 @@ let g:ctrlp_by_filename = 0
     \ &ft=='scheme'     ? ':!csc %<cr>:!time ./%:r<cr>' :
     \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
     \ &ft=='racket'     ? ':!racket %<cr>' :
-    \ &ft=='haskell'    ? ':!stack run<cr>' :
+    "\ &ft=='haskell'    ? ':!stack run<cr>' :
+    \ &ft=='haskell'    ? ':!time stack runghc %<cr>' :
     \ &ft=='rust'       ? ':!time cargo +nightly run --release<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
@@ -168,7 +173,10 @@ let g:ctrlp_by_filename = 0
     \ &ft=='typescript' ? ':!npm run build<cr>' :
     \ &ft=='html'       ? ':!npm run build<cr>' :
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fmio %:r;<cr>' :
+    \ &ft=='fmfm'       ? ':!time fmjs %:r --run<cr>' :
+    \ &ft=='formality'  ? ':!time fmjs %:r --run<cr>' :
+    \ &ft=='kind'       ? ':!time kind %:r --run<cr>' :
+    "\ &ft=='formality'  ? ':!time fmio %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='formcore'   ? ':!time fmio %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
@@ -206,7 +214,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='typescript' ? ':!npm run build<cr>' :
     \ &ft=='html'       ? ':!npm run build<cr>' :
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fmcjs %:r<cr>' :
+    \ &ft=='formality'  ? ':!time fm %<cr>' :
     \ &ft=='formcore'   ? ':!time fmcjs %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
@@ -244,7 +252,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='typescript' ? ':!npm run build<cr>' :
     \ &ft=='html'       ? ':!npm run build<cr>' :
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fmcrun main<cr>' :
+    \ &ft=='formality'  ? ':!time fmio %:r<cr>' :
     \ &ft=='formcore'   ? ':!time fmcrun main<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
@@ -272,7 +280,7 @@ let g:ctrlp_by_filename = 0
 " NERDTree stuff
 :let NERDTreeIgnore = ['\.idr\~$','\.ibc$','\.min.js$','\.agdai','\.pyc$','\.hi$','\.o$','\.js_o$','\.js_hi$','\.dyn_o$','\.dyn_hi$','\.jsexe','.*dist\/.*','.*bin\/.*']
 :let NERDTreeChDirMode = 2
-:let NERDTreeWinSize = 20
+:let NERDTreeWinSize = 16
 :let NERDTreeShowHidden=1
 :nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
 
@@ -291,10 +299,10 @@ au VimEnter * wincmd l
 :set clipboard=unnamed,unnamedplus,autoselect
 
 " PBufferWindows
-:map <left> 4<C-w><
-:map <right> 4<C-w>>
-:map <up> 4<C-w>-
-:map <down> 4<C-w>+
+:map <left> 1<C-w><
+:map <right> 1<C-w>>
+:map <up> 1<C-w>-
+:map <down> 1<C-w>+
 :noremap <C-j> <esc><C-w>j
 ":noremap <C-k> <esc><C-w>k
 :noremap <C-h> <esc><C-w>h
@@ -412,12 +420,16 @@ au BufNewFile,BufRead *.eatt set filetype=eatt
 au BufNewFile,BufRead *.eatt set syntax=javascript
 au BufNewFile,BufRead *.fm set filetype=formality
 au BufNewFile,BufRead *.fm set syntax=javascript
+au BufNewFile,BufRead *.fmfm set filetype=fmfm
+au BufNewFile,BufRead *.fmfm set syntax=javascript
 au BufNewFile,BufRead *.ifm set filetype=informality
 au BufNewFile,BufRead *.ifm set syntax=javascript
 au BufNewFile,BufRead *.eac set filetype=eac
 au BufNewFile,BufRead *.eac set syntax=javascript
 au BufNewFile,BufRead *.fmc set filetype=formcore
 au BufNewFile,BufRead *.fmc set syntax=javascript
+au BufNewFile,BufRead *.kind set filetype=kind
+au BufNewFile,BufRead *.kind set syntax=javascript
 filetype plugin on
 
 "filetype on

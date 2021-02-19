@@ -1,13 +1,13 @@
 defaults write NSGlobalDomain KeyRepeat -int 1
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
+eval $(/opt/homebrew/bin/brew shellenv)
+
 # ag search and replace
 function agr { ag -0 -l "$1" | xargs -0 perl -pi.bak -e "s/$1/$2/g"; }
-export -f agr
 
-alias vim='/Applications/MacVim.app/Contents/bin/mvim -v'
+#alias vim='/Applications/MacVim.app/Contents/bin/mvim -v'
 alias vifm='vifm .'
-
 alias vic="cd ~/vic"
 alias dev="cd ~/vic/dev"
 alias doc="cd ~/vic/doc"
@@ -25,13 +25,7 @@ alias sys="cd ~/vic/dev/moonad/sys"
 alias lib="cd ~/vic/dev/moonad/lib"
 alias uwu="cd ~/vic/uwu"
 
-function base() {
-  scp fpm:~/formality-package-manager/fm/Base#$1.fm .
-  scp Base#$1.fm fpm:~/formality-package-manager/fm/Base#.fm
-}
-
 export LSCOLORS=ExFxBxDxCxegedabagacad
-#export PS1='λ '
 export PS1='[\w]\[\033[00m\] '
 export CLICOLOR=1
 
@@ -41,15 +35,7 @@ alias c='clear'
 alias ic='imgcat'
 alias ag='ag --ignore "*min.js" --ignore "*node_modules*"'
 
-export PATH="$HOME/.cargo/bin:$PATH"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
-test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
-
-# GHC
-[ -f "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env" ] && source "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env"
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
