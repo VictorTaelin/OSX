@@ -25,10 +25,6 @@ alias sys="cd ~/vic/dev/moonad/sys"
 alias lib="cd ~/vic/dev/moonad/lib"
 alias uwu="cd ~/vic/uwu"
 
-export LSCOLORS=ExFxBxDxCxegedabagacad
-export PS1='[\w]\[\033[00m\] '
-export CLICOLOR=1
-
 alias ls='ls -GFhla'
 alias tree='tree -I node_modules'
 alias c='clear'
@@ -39,3 +35,7 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+export LSCOLORS=ExFxBxDxCxegedabagacad
+export PS1='%n@%m %~$ '
+export CLICOLOR=1
