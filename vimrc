@@ -280,7 +280,7 @@ let g:ctrlp_by_filename = 0
 " NERDTree stuff
 :let NERDTreeIgnore = ['\.idr\~$','\.ibc$','\.min.js$','\.agdai','\.pyc$','\.hi$','\.o$','\.js_o$','\.js_hi$','\.dyn_o$','\.dyn_hi$','\.jsexe','.*dist\/.*','.*bin\/.*']
 :let NERDTreeChDirMode = 2
-:let NERDTreeWinSize = 16
+:let NERDTreeWinSize = 24
 :let NERDTreeShowHidden=1
 :nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
 
@@ -430,6 +430,14 @@ au BufNewFile,BufRead *.fmc set filetype=formcore
 au BufNewFile,BufRead *.fmc set syntax=javascript
 au BufNewFile,BufRead *.kind set filetype=kind
 au BufNewFile,BufRead *.kind set syntax=javascript
+au BufNewFile,BufRead *.pass set syntax=javascript
+
+" PASSWORD MANAGER
+au BufNewFile,BufRead *.pass set filetype=javascript
+au BufNewFile,BufRead *.pass set syntax=javascript
+au BufNewFile,BufRead *.pass syntax region Password start=/"{/ end=/}"/
+au BufNewFile,BufRead *.pass highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.pass set colorcolumn=0
 filetype plugin on
 
 "filetype on

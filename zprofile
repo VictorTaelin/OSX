@@ -5,6 +5,7 @@ eval $(/opt/homebrew/bin/brew shellenv)
 
 # ag search and replace
 function agr { ag -0 -l "$1" | xargs -0 perl -pi.bak -e "s/$1/$2/g"; }
+function rmbak { find . -name "*.bak" -type f -delete; }
 
 #alias vim='/Applications/MacVim.app/Contents/bin/mvim -v'
 alias vifm='vifm .'
@@ -39,3 +40,5 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 export LSCOLORS=ExFxBxDxCxegedabagacad
 export PS1='%n@%m %~$ '
 export CLICOLOR=1
+
+[ -f "/Users/v/.ghcup/env" ] && source "/Users/v/.ghcup/env" # ghcup-env
