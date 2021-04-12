@@ -98,6 +98,7 @@ set linebreak
 set nolist  " list disables linebreak
 set textwidth=80
 set wrapmargin=0
+set cryptmethod=blowfish2
 
 " CtrlP stuff
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
@@ -143,7 +144,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
     \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='c'          ? ':!clang -O2 -L/System/Library/Frameworks -Wall % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='c'          ? ':!clang -O2 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!scp % victu:~/cuda<CR>:!ssh victu /usr/local/cuda/bin/nvcc -O3 /home/v/cuda/% -o /home/v/cuda/%:r<CR>:!ssh victu time /home/v/cuda/%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -std=c++11 -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='agda'       ? ':!agda -i src %<cr>' :
@@ -163,7 +164,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
     \ &ft=='racket'     ? ':!racket %<cr>' :
     "\ &ft=='haskell'    ? ':!stack run<cr>' :
-    \ &ft=='haskell'    ? ':!time stack runghc %<cr>' :
+    \ &ft=='haskell'    ? ':!time ghc -O2 % -o .tmp; time ./.tmp<cr>' :
     \ &ft=='rust'       ? ':!time cargo +nightly run --release<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
@@ -216,6 +217,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
     \ &ft=='formality'  ? ':!time fm %<cr>' :
     \ &ft=='formcore'   ? ':!time fmcjs %:r<cr>' :
+    \ &ft=='kind'       ? ':!node /Users/v/vic/dev/Kind/web/build.js<cr>:!osascript ~/vic/dev/refresh_chrome.applescript &<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
@@ -254,6 +256,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
     \ &ft=='formality'  ? ':!time fmio %:r<cr>' :
     \ &ft=='formcore'   ? ':!time fmcrun main<cr>' :
+    \ &ft=='kind'       ? ':!node /Users/v/vic/dev/Kind/web/build.js<cr>:!osascript ~/vic/dev/refresh_chrome.applescript &<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
@@ -270,8 +273,8 @@ let g:ctrlp_by_filename = 0
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> <leader>m ':q!<cr>'
-:nnoremap <expr> <leader>w ':w!<cr>:!clear; npm run build<cr>:!osascript ~/dev/me/refresh_chrome.applescript &<cr>'
-:nnoremap <expr> <leader>p ':w!<cr>:!clear; npm run publish<cr>'
+":nnoremap <expr> <leader>w ':w!<cr>:!clear; npm run build<cr>:!osascript ~/dev/me/refresh_chrome.applescript &<cr>'
+:nnoremap <expr> <leader>w ':w!<cr>:!clear; node /Users/v/vic/dev/Kind/web/build.js<cr>:!osascript ~/vic/dev/refresh_chrome.applescript &<cr>'
 :nnoremap <expr> <leader>x ':x!<cr>'
 :nnoremap <expr> <leader>q ':q!<cr>'
 ":map <leader>q :xa!<cr>
@@ -330,8 +333,8 @@ hi link lsReservedError NONE
 :syntax on
 
 " cursor always in middle of screen
-:set so=99999
-:set siso=99999
+:set scrolloff=99999 " vertically keep cursor on the middle of the screen
+:set sidescrolloff=0 " only scroll horizontally when out of bounds
 
 :map , <leader>
 
@@ -430,14 +433,15 @@ au BufNewFile,BufRead *.fmc set filetype=formcore
 au BufNewFile,BufRead *.fmc set syntax=javascript
 au BufNewFile,BufRead *.kind set filetype=kind
 au BufNewFile,BufRead *.kind set syntax=javascript
-au BufNewFile,BufRead *.pass set syntax=javascript
+au BufNewFile,BufRead *.pwd set syntax=javascript
 
 " PASSWORD MANAGER
-au BufNewFile,BufRead *.pass set filetype=javascript
-au BufNewFile,BufRead *.pass set syntax=javascript
-au BufNewFile,BufRead *.pass syntax region Password start=/"{/ end=/}"/
-au BufNewFile,BufRead *.pass highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
-au BufNewFile,BufRead *.pass set colorcolumn=0
+au BufNewFile,BufRead *.pwd set filetype=javascript
+au BufNewFile,BufRead *.pwd set syntax=javascript
+au BufNewFile,BufRead *.pwd syntax region Password start=/"{/ end=/}"/
+au BufNewFile,BufRead *.pwd highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.pwd set colorcolumn=0
+au BufNewFile,BufRead *.pwd set noundofile
 filetype plugin on
 
 "filetype on
