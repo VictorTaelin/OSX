@@ -62,7 +62,7 @@ hi Folded ctermbg=231 ctermfg=2
 hi FoldColumn ctermbg=white ctermfg=darkred
 
 set ruler
-set colorcolumn=80
+"set colorcolumn=80
 set ttyfast
 set ttyscroll=3
 set lazyredraw
@@ -101,14 +101,16 @@ set wrapmargin=0
 set cryptmethod=blowfish2
 
 " CtrlP stuff
-let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
+"let g:ctrlp_match_func = {'match' : 'cpsm#CtrlPMatch' }
+"let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 let g:ctrlp_by_filename = 0
 :map <expr> <space> ":CtrlP ".getcwd()."<cr>"
-:set wildignore+=*/tmp/*,*/node_modules/*,*/migrations*,*.min.*,*.so,*.swp,*.zip,*.pyc,*.hi,*.o,*.dyn_hi,*.dyn_o,*.jsexe/*,*/dist/*,*/bin/*,*.js_hi,*.js_o,*.agdai,*/.git/*,*/elm-stuff/*,*/sprites/* " MacOSX/Linux
+":set wildignore+=*/tmp/*,*/node_modules/*,*/migrations*,*.min.*,*.so,*.swp,*.zip,*.pyc,*.hi,*.o,*.dyn_hi,*.dyn_o,*.jsexe/*,*/dist/*,*/bin/*,*.js_hi,*.js_o,*.agdai,*/.git/*,*/elm-stuff/*,*/sprites/* " MacOSX/Linux
 
 :noremap j gj
 :noremap k gk
 
+:nnoremap <expr> r ':!time kind %<cr>'
 " The greatest
 :nnoremap <expr> r ':!clear<cr>:w!<cr>'.(
     \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
@@ -116,7 +118,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='caramel'    ? ':!time mel main<cr>' :
     \ &ft=='ocaml'      ? ':!ocamlc -o %:r %<cr>:!./%:r<cr>' :
     \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
-    \ &ft=='python'     ? ':!time python %<cr>' :
+    \ &ft=='python'     ? ':!time python3 %<cr>' :
     \ &ft=='coc'        ? ':!time (coc type %:r; coc norm %:r)<cr>' :
     \ &ft=='scheme'     ? ':!time scheme --script %<cr>' :
     \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
@@ -176,7 +178,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
     \ &ft=='fmfm'       ? ':!time fmjs %:r --run<cr>' :
     \ &ft=='formality'  ? ':!time fmjs %:r --run<cr>' :
-    \ &ft=='kind'       ? ':!time kind %:r --run<cr>' :
+    \ &ft=='kind'       ? ':!time kind ' . substitute(expand("%:r"),"/",".","g") . ' --run<cr>' :
     "\ &ft=='formality'  ? ':!time fmio %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='formcore'   ? ':!time fmio %:r<cr>' :
@@ -217,7 +219,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
     \ &ft=='formality'  ? ':!time fm %<cr>' :
     \ &ft=='formcore'   ? ':!time fmcjs %:r<cr>' :
-    \ &ft=='kind'       ? ':!node /Users/v/vic/dev/Kind/web/build.js<cr>:!osascript ~/vic/dev/refresh_chrome.applescript &<cr>' :
+    \ &ft=='kind'       ? ':!node /Users/v/vic/dev/Kind/web/build.js %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
@@ -256,7 +258,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
     \ &ft=='formality'  ? ':!time fmio %:r<cr>' :
     \ &ft=='formcore'   ? ':!time fmcrun main<cr>' :
-    \ &ft=='kind'       ? ':!node /Users/v/vic/dev/Kind/web/build.js<cr>:!osascript ~/vic/dev/refresh_chrome.applescript &<cr>' :
+    \ &ft=='kind'       ? ':!node /Users/v/vic/dev/Kind/web/build.js %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
@@ -434,6 +436,16 @@ au BufNewFile,BufRead *.fmc set syntax=javascript
 au BufNewFile,BufRead *.kind set filetype=kind
 au BufNewFile,BufRead *.kind set syntax=javascript
 au BufNewFile,BufRead *.pwd set syntax=javascript
+au BufNewFile,BufRead *.pvt set syntax=javascript
+
+" EVERYTHING MANAGER
+au BufNewFile,BufRead *.pvt set filetype=javascript
+au BufNewFile,BufRead *.pvt set syntax=javascript
+au BufNewFile,BufRead *.pvt syntax region Password start=/^/ end=/$/
+au BufNewFile,BufRead *.pvt highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.pvt set colorcolumn=0
+au BufNewFile,BufRead *.pvt set noundofile
+filetype plugin on
 
 " PASSWORD MANAGER
 au BufNewFile,BufRead *.pwd set filetype=javascript
@@ -443,6 +455,10 @@ au BufNewFile,BufRead *.pwd highlight Password ctermfg=red guifg=red ctermbg=red
 au BufNewFile,BufRead *.pwd set colorcolumn=0
 au BufNewFile,BufRead *.pwd set noundofile
 filetype plugin on
+
+" Scheme
+au BufNewFile,BufRead *.scm set nolisp
+ 
 
 "filetype on
 "filetype plugin indent on
