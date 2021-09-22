@@ -2,17 +2,9 @@
 
 #### On OSX:
 
-Install `vicboard.keylayout`, remap CAPSLOCK to Option on OSX Settings.
+Install `vicboard.keylayout` and remap CAPSLOCK to Option on OSX Settings.
+Karabiner, Seil and similar aren't needed anymore!
 
 #### On Windows (for Parsec):
 
-Download and unzip `windows_vicboard.zip`, install
-`vicboard/setup.exe`, open `brackets.exe`, `numpad.exe` and
-`win_to_control.exe`. To auto-open them, press `Win+R`,
-enter `shell:startup` and move them there.
-
-- Mac Left-Command = Windows Left-Ctrl
-- Mac Left-Option = Windows Left-Alt
-- Mac Right-Command = Windows Win
-
-//test
+Take a breath and check the README on the `windows_vicboard` directory.
