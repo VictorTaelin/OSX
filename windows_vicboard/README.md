@@ -42,6 +42,16 @@ e adicionando atalhos para o `modifiers.exe` e o `numpad.exe` nesse diretório.
 
 - RightAlt para F24
 
+4. Bonus: seguir o guia do VB-Cable do Parsec
+
+Ao usar o Parsec para conectar do Macbook pro Razer, há um problema no qual o
+Razer fica mutado, e, se desmutar, ele passa a tocar o áudio também. Ou seja,
+ambos os notebooks tocarão o mesmo áudio. Esse problema pode ser facilmente
+resolvido instalando o aplicativo VB-Cable e seguindo o guia nesse link:
+https://support.parsec.app/hc/en-us/articles/115003042152-Eliminating-Sound-Echo-While-Co-Op-ing-With-Friends
+Obrigado @Geroyuni no Discord do Parsec pela solução!
+
+
 Explicação
 ----------
 
