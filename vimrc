@@ -132,7 +132,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='ultimate'   ? ':!time ult %<cr>' :
     \ &ft=='lambda'     ? ':!time absal %<cr>' :
     \ &ft=='javascript' ? ':!time node %<cr>' :
-    \ &ft=='typescript' ? ':!time ts-node %<cr>' :
+    \ &ft=='typescript' ? ':!time deno --unstable run --allow-all %<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='escoc'      ? ':!time escoc %:r<cr>' :
     \ &ft=='eatt'       ? ':!time eatt -itneTNRx %:r<cr>' :
@@ -141,12 +141,14 @@ let g:ctrlp_by_filename = 0
     \ &ft=='formality'  ? ':!time fmjs %<cr>' :
     \ &ft=='formcore'   ? ':!time fmc %<cr>' :
     \ &ft=='kind'       ? ':!time kind %<cr>' :
+    \ &ft=='kindelia'   ? ':!time kindelia %<cr>' :
+    \ &ft=='lambolt'    ? ':!time lam % ts<cr>' :
     \ &ft=='sic'        ? ':!time sic -s %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
     \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='c'          ? ':!clang -O2 % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='c'          ? ':!clang % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!scp % victu:~/cuda<CR>:!ssh victu /usr/local/cuda/bin/nvcc -O3 /home/v/cuda/% -o /home/v/cuda/%:r<CR>:!ssh victu time /home/v/cuda/%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -std=c++11 -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='agda'       ? ':!agda -i src %<cr>' :
@@ -167,18 +169,20 @@ let g:ctrlp_by_filename = 0
     \ &ft=='racket'     ? ':!racket %<cr>' :
     "\ &ft=='haskell'    ? ':!stack run<cr>' :
     \ &ft=='haskell'    ? ':!time ghc -O2 % -o .tmp; time ./.tmp<cr>' :
-    \ &ft=='rust'       ? ':!time cargo +nightly run --release<cr>' :
+    \ &ft=='rust'       ? ':!time cargo run --release<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
     \ &ft=='dvl'        ? ':!dvl run %<cr>' :
     \ &ft=='lambda'     ? ':!time absal -s %<cr>' :
     \ &ft=='javascript' ? ':!npm run build<cr>' :
-    \ &ft=='typescript' ? ':!npm run build<cr>' :
+    \ &ft=='typescript' ? ':!time deno --unstable run --reload --allow-all %<cr>' :
+    "\ &ft=='typescript' ? ':!npm run build<cr>' :
     \ &ft=='html'       ? ':!npm run build<cr>' :
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
     \ &ft=='fmfm'       ? ':!time fmjs %:r --run<cr>' :
     \ &ft=='formality'  ? ':!time fmjs %:r --run<cr>' :
     \ &ft=='kind'       ? ':!time kind ' . substitute(expand("%:r"),"/",".","g") . ' --run<cr>' :
+    \ &ft=='lambolt'    ? ':!time lam % c<cr>' :
     "\ &ft=='formality'  ? ':!time fmio %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='formcore'   ? ':!time fmio %:r<cr>' :
@@ -188,7 +192,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
     \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='c'          ? ':!clang -O2 -L/System/Library/Frameworks -Wall % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='c'          ? ':!clang -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='agda'       ? ':!agda -i src %<cr>' :
@@ -227,7 +231,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
     \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='c'          ? ':!clang -O2 -L/System/Library/Frameworks -Wall % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='c'          ? ':!clang -O3 -Wall % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='agda'       ? ':!agda -i src %<cr>' :
@@ -266,7 +270,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
     \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='c'          ? ':!clang -O2 -L/System/Library/Frameworks -Wall % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='c'          ? ':!clang -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='agda'       ? ':!agda -i src %<cr>' :
@@ -281,6 +285,8 @@ let g:ctrlp_by_filename = 0
 :nnoremap <expr> <leader>q ':q!<cr>'
 ":map <leader>q :xa!<cr>
 
+" GPT-3 binding from https://github.com/tom-doerr/vim_codex
+:nmap <leader>g :<C-U>exe "CreateCompletion ".v:count1<CR>
 
 " NERDTree stuff
 :let NERDTreeIgnore = ['\.idr\~$','\.ibc$','\.min.js$','\.agdai','\.pyc$','\.hi$','\.o$','\.js_o$','\.js_hi$','\.dyn_o$','\.dyn_hi$','\.jsexe','.*dist\/.*','.*bin\/.*']
@@ -435,6 +441,10 @@ au BufNewFile,BufRead *.fmc set filetype=formcore
 au BufNewFile,BufRead *.fmc set syntax=javascript
 au BufNewFile,BufRead *.kind set filetype=kind
 au BufNewFile,BufRead *.kind set syntax=javascript
+au BufNewFile,BufRead *.kindelia set filetype=kindelia
+au BufNewFile,BufRead *.kindelia set syntax=javascript
+au BufNewFile,BufRead *.bolt set filetype=lambolt
+au BufNewFile,BufRead *.bolt set syntax=javascript
 au BufNewFile,BufRead *.pwd set syntax=javascript
 au BufNewFile,BufRead *.pvt set syntax=javascript
 
