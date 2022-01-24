@@ -142,7 +142,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='formcore'   ? ':!time fmc %<cr>' :
     \ &ft=='kind'       ? ':!time kind %<cr>' :
     \ &ft=='kindelia'   ? ':!time kindelia %<cr>' :
-    \ &ft=='lambolt'    ? ':!time lam % ts<cr>' :
+    \ &ft=='lambolt'    ? ':!time hovm % ts<cr>' :
     \ &ft=='sic'        ? ':!time sic -s %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
@@ -455,6 +455,7 @@ au BufNewFile,BufRead *.pvt syntax region Password start=/^/ end=/$/
 au BufNewFile,BufRead *.pvt highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.pvt set colorcolumn=0
 au BufNewFile,BufRead *.pvt set noundofile
+au BufNewFile,BufRead *.pvt :nmap <leader>g :<C-U>echo "NOT ALLOWED, THIS IS A PVT FILE! ".v:count1<CR>
 filetype plugin on
 
 " PASSWORD MANAGER
@@ -464,6 +465,7 @@ au BufNewFile,BufRead *.pwd syntax region Password start=/"{/ end=/}"/
 au BufNewFile,BufRead *.pwd highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.pwd set colorcolumn=0
 au BufNewFile,BufRead *.pwd set noundofile
+au BufNewFile,BufRead *.pwd :nmap <leader>g :<C-U>echo "NOT ALLOWED, THIS IS A PWD FILE! ".v:count1<CR>
 filetype plugin on
 
 " Scheme
