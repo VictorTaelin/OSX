@@ -141,8 +141,10 @@ let g:ctrlp_by_filename = 0
     \ &ft=='formality'  ? ':!time fmjs %<cr>' :
     \ &ft=='formcore'   ? ':!time fmc %<cr>' :
     \ &ft=='kind'       ? ':!time kind %<cr>' :
+    \ &ft=='kind2'      ? ':!time kind2 check %<cr>' :
     \ &ft=='kindelia'   ? ':!time kindelia %<cr>' :
-    \ &ft=='lambolt'    ? ':!time hovm % ts<cr>' :
+    \ &ft=='lambolt'    ? ':!time hvm % ts<cr>' :
+    \ &ft=='hvm'        ? ':!time hvm run % 0<cr>' :
     \ &ft=='sic'        ? ':!time sic -s %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
@@ -168,7 +170,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
     \ &ft=='racket'     ? ':!racket %<cr>' :
     "\ &ft=='haskell'    ? ':!stack run<cr>' :
-    \ &ft=='haskell'    ? ':!time ghc -O2 % -o .tmp; time ./.tmp<cr>' :
+    \ &ft=='haskell'    ? ':!time ghc -O2 % -o .tmp; time ./.tmp 0; rm %:r.hi %:r.o .tmp<cr>' :
     \ &ft=='rust'       ? ':!time cargo run --release<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
@@ -183,6 +185,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='formality'  ? ':!time fmjs %:r --run<cr>' :
     \ &ft=='kind'       ? ':!time kind ' . substitute(expand("%:r"),"/",".","g") . ' --run<cr>' :
     \ &ft=='lambolt'    ? ':!time lam % c<cr>' :
+    \ &ft=='hvm'        ? ':!hvm c %; clang -O2 %:r.c -o %:r; time ./%:r 0; rm %:r %:r.c<cr>' :
     "\ &ft=='formality'  ? ':!time fmio %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='formcore'   ? ':!time fmio %:r<cr>' :
@@ -278,11 +281,12 @@ let g:ctrlp_by_filename = 0
     \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
     \ ':!time cc %<cr>')
 
-:nnoremap <expr> <leader>m ':q!<cr>'
+:nnoremap <expr> <leader>m ':w!<cr>:!clear; cargo install --path .<cr>'
 ":nnoremap <expr> <leader>w ':w!<cr>:!clear; npm run build<cr>:!osascript ~/dev/me/refresh_chrome.applescript &<cr>'
 :nnoremap <expr> <leader>w ':w!<cr>:!clear; node /Users/v/vic/dev/Kind/web/build.js<cr>:!osascript ~/vic/dev/refresh_chrome.applescript &<cr>'
 :nnoremap <expr> <leader>x ':x!<cr>'
 :nnoremap <expr> <leader>q ':q!<cr>'
+:nnoremap <leader>b :put!='----------'<cr>:put!=strftime('%Y-%m-%d')<cr>
 ":map <leader>q :xa!<cr>
 
 " GPT-3 binding from https://github.com/tom-doerr/vim_codex
@@ -439,12 +443,16 @@ au BufNewFile,BufRead *.eac set filetype=eac
 au BufNewFile,BufRead *.eac set syntax=javascript
 au BufNewFile,BufRead *.fmc set filetype=formcore
 au BufNewFile,BufRead *.fmc set syntax=javascript
+au BufNewFile,BufRead *.kind2 set filetype=kind2
+au BufNewFile,BufRead *.kind2 set syntax=javascript
 au BufNewFile,BufRead *.kind set filetype=kind
 au BufNewFile,BufRead *.kind set syntax=javascript
 au BufNewFile,BufRead *.kindelia set filetype=kindelia
 au BufNewFile,BufRead *.kindelia set syntax=javascript
 au BufNewFile,BufRead *.bolt set filetype=lambolt
 au BufNewFile,BufRead *.bolt set syntax=javascript
+au BufNewFile,BufRead *.hvm set filetype=hvm
+au BufNewFile,BufRead *.hvm set syntax=javascript
 au BufNewFile,BufRead *.pwd set syntax=javascript
 au BufNewFile,BufRead *.pvt set syntax=javascript
 
