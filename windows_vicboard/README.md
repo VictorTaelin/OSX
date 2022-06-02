@@ -77,3 +77,12 @@ transforma o Win do Parsec em Ctrl.
 OBS: Se houver a necessidade de modificar algum `ahk`, lembrar de rebuildar os
 `.exe`. Se houver a necessidade de modifiar o `klc`, lembrar de trocar a pasta
 `vicbrd0` desse repositório.
+
+Ajeitando o mouse
+-----------------
+
+O wheel do mouse fica invertido. Tentei muitas coisas, mas só o que funcionou
+foi editar o registro. Explicação: https://www.windowscentral.com/how-reverse-scrolling-direction-windows-10
+
+Path: Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\HID\VID_1532&PID_005E\7&8dfebf6&0&0000\Device Parameters
+
