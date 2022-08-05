@@ -125,7 +125,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='racket'     ? ':!racket %<cr>' :
     \ &ft=='haskell'    ? ':!time runghc --ghc-arg=-freverse-errors %<cr>' :
     "\ &ft=='haskell'    ? ':!stack runghc %<cr>' :
-    \ &ft=='rust'       ? ':!time cargo run<cr>' :
+    \ &ft=='rust'       ? ':!time RUST_BACKTRACE=1 cargo lrun<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
     \ &ft=='dvl'        ? ':!dvl run %<cr>' :
@@ -142,14 +142,16 @@ let g:ctrlp_by_filename = 0
     \ &ft=='formcore'   ? ':!time fmc %<cr>' :
     \ &ft=='kind'       ? ':!time kind %<cr>' :
     \ &ft=='kind2'      ? ':!time kind2 check %<cr>' :
-    \ &ft=='kindelia'   ? ':!time kindelia %<cr>' :
+    \ &ft=='type'       ? ':!time kind2 derive %<cr>' :
+    \ &ft=='kindelia'   ? ':!time kindelia run %<cr>' :
     \ &ft=='lambolt'    ? ':!time hvm % ts<cr>' :
-    \ &ft=='hvm'        ? ':!time hvm run % 0<cr>' :
+    \ &ft=='hvm'        ? ':!time hvm run % 2<cr>' :
     \ &ft=='sic'        ? ':!time sic -s %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
-    \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
-    \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='solidity'   ? ':!run_solidity %<cr>' :
+    \ &ft=='idris2'     ? ':!time idris2 % -o %:r<cr>:!time ./build/exec/%:r<cr>' :
+    \ &ft=='lean'       ? ':!time lean %<cr>' :
     \ &ft=='c'          ? ':!clang % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!scp % victu:~/cuda<CR>:!ssh victu /usr/local/cuda/bin/nvcc -O3 /home/v/cuda/% -o /home/v/cuda/%:r<CR>:!ssh victu time /home/v/cuda/%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -std=c++11 -O3 % -o %:r<cr>:!time ./%:r<cr>' :
@@ -171,7 +173,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='racket'     ? ':!racket %<cr>' :
     "\ &ft=='haskell'    ? ':!stack run<cr>' :
     \ &ft=='haskell'    ? ':!time ghc -O2 % -o .tmp; time ./.tmp 0; rm %:r.hi %:r.o .tmp<cr>' :
-    \ &ft=='rust'       ? ':!time cargo run --release<cr>' :
+    \ &ft=='rust'       ? ':!time cargo lrun --release<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
     \ &ft=='dvl'        ? ':!dvl run %<cr>' :
@@ -184,8 +186,10 @@ let g:ctrlp_by_filename = 0
     \ &ft=='fmfm'       ? ':!time fmjs %:r --run<cr>' :
     \ &ft=='formality'  ? ':!time fmjs %:r --run<cr>' :
     \ &ft=='kind'       ? ':!time kind ' . substitute(expand("%:r"),"/",".","g") . ' --run<cr>' :
+    \ &ft=='kind2'      ? ':!time kind2 eval %<cr>' :
+    \ &ft=='kindelia'   ? ':!time kindelia post % 127.0.0.1:42000<cr>' :
     \ &ft=='lambolt'    ? ':!time lam % c<cr>' :
-    \ &ft=='hvm'        ? ':!hvm c %; clang -O2 %:r.c -o %:r; time ./%:r 0; rm %:r %:r.c<cr>' :
+    \ &ft=='hvm'        ? ':!hvm c %; clang -O2 %:r.c -o %:r; time ./%:r 2; rm %:r %:r.c<cr>' :
     "\ &ft=='formality'  ? ':!time fmio %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='formcore'   ? ':!time fmio %:r<cr>' :
@@ -194,7 +198,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
-    \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='idris2'     ? ':!idris2 % -o %:r<cr>:!time ./build/exec/%:r<cr>' :
     \ &ft=='c'          ? ':!clang -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
@@ -215,7 +219,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
     \ &ft=='racket'     ? ':!racket %<cr>' :
     \ &ft=='haskell'    ? ':!stack run<cr>' :
-    \ &ft=='rust'       ? ':!time cargo +nightly run --release<cr>' :
+    \ &ft=='rust'       ? ':!time cargo +nightly lrun --release<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
     \ &ft=='dvl'        ? ':!dvl run %<cr>' :
@@ -226,14 +230,16 @@ let g:ctrlp_by_filename = 0
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
     \ &ft=='formality'  ? ':!time fm %<cr>' :
     \ &ft=='formcore'   ? ':!time fmcjs %:r<cr>' :
+    \ &ft=='hvm'        ? ':!cargo install --path .<cr>' :
     \ &ft=='kind'       ? ':!node /Users/v/vic/dev/Kind/web/build.js %:r<cr>' :
+    \ &ft=='kind2'      ? ':!time kind2 run %<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
-    \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='idris2'     ? ':!idris2 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='c'          ? ':!clang -O3 -Wall % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
@@ -272,7 +278,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
-    \ &ft=='idris'      ? ':!idris % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='idris2'     ? ':!idris2 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='c'          ? ':!clang -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
@@ -328,7 +334,7 @@ au VimEnter * wincmd l
 :map! <C-l> <esc><C-w>l
 
 " Change Color when entering Insert Mode
-hi cursorline cterm=none ctermbg=white
+"hi cursorline cterm=none ctermbg=white
 au InsertEnter * set cursorline
 au InsertLeave * set nocursorline
 
@@ -418,7 +424,8 @@ au BufNewFile,BufRead *.escoc set syntax=javascript
 au BufNewFile,BufRead *.sic set filetype=sic
 au BufNewFile,BufRead *.moon set syntax=javascript
 au BufNewFile,BufRead *.mt set filetype=morte
-au BufNewFile,BufRead *.idr set filetype=idris
+"au BufNewFile,BufRead *.idr set filetype=idris
+au BufNewFile,BufRead *.lean set filetype=lean
 au BufNewFile,BufRead *.coc set filetype=coc
 au BufNewFile,BufRead *.ult set filetype=ultimate
 au BufNewFile,BufRead *.lc set filetype=lambda
@@ -445,14 +452,20 @@ au BufNewFile,BufRead *.fmc set filetype=formcore
 au BufNewFile,BufRead *.fmc set syntax=javascript
 au BufNewFile,BufRead *.kind2 set filetype=kind2
 au BufNewFile,BufRead *.kind2 set syntax=javascript
+au BufNewFile,BufRead *.type set filetype=type
+au BufNewFile,BufRead *.type set syntax=javascript
 au BufNewFile,BufRead *.kind set filetype=kind
 au BufNewFile,BufRead *.kind set syntax=javascript
 au BufNewFile,BufRead *.kindelia set filetype=kindelia
 au BufNewFile,BufRead *.kindelia set syntax=javascript
+au BufNewFile,BufRead *.kdl set filetype=kindelia
+au BufNewFile,BufRead *.kdl set syntax=javascript
 au BufNewFile,BufRead *.bolt set filetype=lambolt
 au BufNewFile,BufRead *.bolt set syntax=javascript
 au BufNewFile,BufRead *.hvm set filetype=hvm
 au BufNewFile,BufRead *.hvm set syntax=javascript
+au BufNewFile,BufRead *.hvm syntax region Password start=/^\/\/\~/ end=/$/ " HVM hidden comments
+au BufNewFile,BufRead *.hvm highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.pwd set syntax=javascript
 au BufNewFile,BufRead *.pvt set syntax=javascript
 
@@ -475,6 +488,7 @@ au BufNewFile,BufRead *.pwd set colorcolumn=0
 au BufNewFile,BufRead *.pwd set noundofile
 au BufNewFile,BufRead *.pwd :nmap <leader>g :<C-U>echo "NOT ALLOWED, THIS IS A PWD FILE! ".v:count1<CR>
 filetype plugin on
+
 
 " Scheme
 au BufNewFile,BufRead *.scm set nolisp
@@ -597,6 +611,18 @@ augroup Binary
   au BufWritePre *.wasm endif
   au BufWritePost *.wasm if &bin | %!xxd
   au BufWritePost *.wasm set nomod | endif
+augroup END
+
+" vim -b : edit binary using xxd-format!
+augroup Binary
+  au!
+  au BufReadPre  *.bin let &bin=1
+  au BufReadPost *.bin if &bin | %!xxd
+  au BufReadPost *.bin set ft=xxd | endif
+  au BufWritePre *.bin if &bin | %!xxd -r
+  au BufWritePre *.bin endif
+  au BufWritePost *.bin if &bin | %!xxd
+  au BufWritePost *.bin set nomod | endif
 augroup END
 
 
