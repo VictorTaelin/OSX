@@ -339,7 +339,10 @@ function! SaveVisibleLines(dest)
 endfunction
 
 function! FillHoles()
-    " Saves visible lines of current file to '.fill.tmp'
+    " Save changes to the buffer
+    exec 'w'
+    
+    " Save visible lines of current file to '.fill.tmp'
     call SaveVisibleLines('.fill.tmp')
 
     " Executes 'holefill' on the current file, and 'fill.tmp'
@@ -347,10 +350,13 @@ function! FillHoles()
 
     " Delete temporary file
     exec '!rm .fill.tmp'
+    
+    " Reload the file
+    exec 'edit!'
 endfunction
 
 " Set key mapping to the new function
-nnoremap <leader>g :call FillHoles()<CR>
+nnoremap <leader>g :!clear<CR>:call FillHoles()<CR>
 
 " --------------------------------------------------------------------------
 
