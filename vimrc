@@ -110,11 +110,7 @@ let g:ctrlp_by_filename = 0
 :noremap j gj
 :noremap k gk
 
-:nnoremap <expr> r ':!time kind %<cr>'
-" The greatest
-:nnoremap <expr> r ':!clear<cr>:w!<cr>'.(
-    \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
-    \ expand('%:t')=='test.js' ? ':!mocha<cr>' :
+:nnoremap <expr> r ':<C-u>!clear<cr>:w!<cr>'.(
     \ &ft=='caramel'    ? ':!time mel main<cr>' :
     \ &ft=='ocaml'      ? ':!ocamlc -o %:r %<cr>:!./%:r<cr>' :
     \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
@@ -124,7 +120,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
     \ &ft=='racket'     ? ':!racket %<cr>' :
     \ &ft=='haskell'    ? ':!time runghc --ghc-arg=-freverse-errors %<cr>' :
-    "\ &ft=='haskell'    ? ':!stack runghc %<cr>' :
+    \ &ft=='sway'       ? ':!time forc test --release --offline<cr>' :
     \ &ft=='rust'       ? ':!time RUST_BACKTRACE=1 cargo lrun<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
@@ -143,24 +139,29 @@ let g:ctrlp_by_filename = 0
     \ &ft=='kind'       ? ':!time kind %<cr>' :
     \ &ft=='kind2'      ? ':!time kind2 check %<cr>' :
     \ &ft=='type'       ? ':!time kind2 derive %<cr>' :
-    \ &ft=='kindelia'   ? ':!time kindelia run %<cr>' :
+    \ &ft=='kindelia'   ? ':!time kindelia test %<cr>' :
     \ &ft=='lambolt'    ? ':!time hvm % ts<cr>' :
-    \ &ft=='hvm'        ? ':!time hvm run % 2<cr>' :
+    "\ &ft=='hvm'        ? ':!/usr/bin/time -l -h hvm run -t 1 -c -f % "(Main '.v:count1.')"<cr>' :
+    \ &ft=='hvm'        ? ':!/usr/bin/time -l -h hvm run -t 1 -c -f % "(Main)"<cr>' :
     \ &ft=='sic'        ? ':!time sic -s %<cr>' :
+    \ &ft=='ic'        ? ':!time ic %<cr>' :
+    \ &ft=='itt'       ? ':!time itt %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!run_solidity %<cr>' :
     \ &ft=='idris2'     ? ':!time idris2 % -o %:r<cr>:!time ./build/exec/%:r<cr>' :
     \ &ft=='lean'       ? ':!time lean %<cr>' :
+    \ &ft=='coq'        ? ':!time coqc %<cr>' :
     \ &ft=='c'          ? ':!clang % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cuda'       ? ':!scp % victu:~/cuda<CR>:!ssh victu /usr/local/cuda/bin/nvcc -O3 /home/v/cuda/% -o /home/v/cuda/%:r<CR>:!ssh victu time /home/v/cuda/%:r<cr>' :
+    \ &ft=='cuda'       ? ':!echo "Sending to Windows..."; rsync % windows:~/cuda<CR>:!echo "Compiling..."; ssh windows /usr/local/cuda/bin/nvcc -arch=sm_70 -O3 /home/v/cuda/% -o /home/v/cuda/%:r<CR>:!echo "Running..."; ssh windows time /home/v/cuda/%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -std=c++11 -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='agda'       ? ':!agda -i src %<cr>' :
+    \ &ft=='agda'       ? ':!time agda -i src %<cr>' :
     \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
+    \ &ft=='sh'         ? ':!time ./%<cr>' :
     \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
     \ ':!time cc %<cr>')
 
-:nnoremap <expr> R ':!clear<cr>:w!<cr>'.(
+:nnoremap <expr> R ':<C-u>!clear<cr>:w!<cr>'.(
     \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
     \ expand('%:t')=='test.js' ? ':!mocha<cr>' :
     \ &ft=='caramel'    ? ':!time mel main<cr>' :
@@ -185,16 +186,18 @@ let g:ctrlp_by_filename = 0
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
     \ &ft=='fmfm'       ? ':!time fmjs %:r --run<cr>' :
     \ &ft=='formality'  ? ':!time fmjs %:r --run<cr>' :
-    \ &ft=='kind'       ? ':!time kind ' . substitute(expand("%:r"),"/",".","g") . ' --run<cr>' :
+    \ &ft=='kind'       ? ':!time kind ' . substitute(expand("%:r"),"/",".","g") . ' --norm<cr>' :
     \ &ft=='kind2'      ? ':!time kind2 eval %<cr>' :
-    \ &ft=='kindelia'   ? ':!time kindelia post % 127.0.0.1:42000<cr>' :
+    \ &ft=='kindelia'   ? ':!time kindelia serialize %<cr>' :
     \ &ft=='lambolt'    ? ':!time lam % c<cr>' :
-    \ &ft=='hvm'        ? ':!hvm c %; clang -O2 %:r.c -o %:r; time ./%:r 2; rm %:r %:r.c<cr>' :
+    "\ &ft=='hvm'        ? ':!hvm compile %; cd %:r; cargo build --release; /usr/bin/time -l -h ./target/release/%:r run -c true "(Main '.v:count1.')"<cr>' :
+    \ &ft=='hvm'        ? ':!hvm compile %; cd %:r; cargo build --release; /usr/bin/time -l -h ./target/release/%:r run -c true "(Main)"<cr>' :
     "\ &ft=='formality'  ? ':!time fmio %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='formcore'   ? ':!time fmio %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
+    \ &ft=='ic'         ? ':!time ic %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
@@ -236,6 +239,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
+    \ &ft=='ic'         ? ':!time ic %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
@@ -275,6 +279,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
+    \ &ft=='ic'         ? ':!time ic %<cr>' :
     \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
@@ -287,7 +292,19 @@ let g:ctrlp_by_filename = 0
     \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
     \ ':!time cc %<cr>')
 
-:nnoremap <expr> <leader>m ':w!<cr>:!clear; cargo install --path .<cr>'
+:nnoremap <expr> <leader>p ':!clear<cr>:w!<cr>'.(
+    \ &ft=='kind2'      ? ':!time kindai %<cr>' :
+    \ ':!time cc %<cr>')
+
+
+
+:nnoremap <expr> <leader>m ':w!<cr>:!clear; time fixit %<cr>'
+:nnoremap <expr> <leader>M ':w!<cr>:!clear; time fixit % 4<cr>'
+":nnoremap <expr> <leader>G ':w!<cr>:!clear; time chatgpt % 4<cr>'
+
+":nnoremap <expr> <leader>m ':w!<cr>:!clear; cargo install --path .<cr>'
+":nnoremap <expr> <leader>M ':w!<cr>:!clear; cargo install --debug --path .<cr>'
+":nnoremap <expr> <leader>M ':w!<cr>:!clear; ./bootstrap.sh<cr>'
 ":nnoremap <expr> <leader>w ':w!<cr>:!clear; npm run build<cr>:!osascript ~/dev/me/refresh_chrome.applescript &<cr>'
 :nnoremap <expr> <leader>w ':w!<cr>:!clear; node /Users/v/vic/dev/Kind/web/build.js<cr>:!osascript ~/vic/dev/refresh_chrome.applescript &<cr>'
 :nnoremap <expr> <leader>x ':x!<cr>'
@@ -295,8 +312,63 @@ let g:ctrlp_by_filename = 0
 :nnoremap <leader>b :put!='----------'<cr>:put!=strftime('%Y-%m-%d')<cr>
 ":map <leader>q :xa!<cr>
 
+
+":nmap <leader>g :<C-U>exe "CreateCompletion ".v:count1<CR>
+
+
+" --------------------------------------------------------------------------
+
+" Calls GPT-4 to fill holes in the current file,
+" omitting collapsed folds to save prompt space
+
+function! SaveVisibleLines(dest)
+  let l:visibleLines = []
+  let lnum = 1
+  while lnum <= line('$')
+    if foldclosed(lnum) == -1
+      call add(l:visibleLines, getline(lnum))
+      let lnum += 1
+    else
+      call add(l:visibleLines, getline(foldclosed(lnum)))
+      call add(l:visibleLines, "...")
+      call add(l:visibleLines, getline(foldclosedend(lnum)))
+      let lnum = foldclosedend(lnum) + 1
+    endif
+  endwhile
+  call writefile(l:visibleLines, a:dest)
+endfunction
+
+function! FillHoles()
+    " Saves visible lines of current file to '.fill.tmp'
+    call SaveVisibleLines('.fill.tmp')
+
+    " Executes 'holefill' on the current file, and 'fill.tmp'
+    exec '!holefill ' . expand('%:p') . ' .fill.tmp'
+
+    " Delete temporary file
+    exec '!rm .fill.tmp'
+endfunction
+
+" Set key mapping to the new function
+nnoremap <leader>g :call FillHoles()<CR>
+
+" --------------------------------------------------------------------------
+
+
+
+
+
+
+
 " GPT-3 binding from https://github.com/tom-doerr/vim_codex
-:nmap <leader>g :<C-U>exe "CreateCompletion ".v:count1<CR>
+":nmap <leader>g :<C-U>exe "CreateCompletion ".v:count1<CR>
+":map <leader>g :AI<cr>
+let g:vim_ai_chat = {
+\  "options": {
+\    "model": "gpt-4",
+\    "temperature": 0.2,
+\  },
+\}
 
 " NERDTree stuff
 :let NERDTreeIgnore = ['\.idr\~$','\.ibc$','\.min.js$','\.agdai','\.pyc$','\.hi$','\.o$','\.js_o$','\.js_hi$','\.dyn_o$','\.dyn_hi$','\.jsexe','.*dist\/.*','.*bin\/.*']
@@ -415,17 +487,24 @@ hi VertSplit ctermfg=lightgray ctermbg=black
 
 " idris ft
 "au BufNewFile,BufRead *.ls set filetype=LLivescript
+au BufNewFile,BufRead *.cu set filetype=cuda
+au BufNewFile,BufRead *.cu set syntax=c
 au BufNewFile,BufRead *.purs set filetype=purescript
 au BufNewFile,BufRead *.chaos set filetype=chaos
 au BufNewFile,BufRead *.chaos set syntax=javascript
 au BufNewFile,BufRead *.moon set filetype=moon
 au BufNewFile,BufRead *.escoc set filetype=escoc
 au BufNewFile,BufRead *.escoc set syntax=javascript
+au BufNewFile,BufRead *.itt set filetype=itt
 au BufNewFile,BufRead *.sic set filetype=sic
+au BufNewFile,BufRead *.ic set filetype=ic
 au BufNewFile,BufRead *.moon set syntax=javascript
 au BufNewFile,BufRead *.mt set filetype=morte
+au BufNewFile,BufRead *.sw set filetype=sway
+au BufNewFile,BufRead *.sw set syntax=rust
 "au BufNewFile,BufRead *.idr set filetype=idris
 au BufNewFile,BufRead *.lean set filetype=lean
+au BufNewFile,BufRead *.v set filetype=coq
 au BufNewFile,BufRead *.coc set filetype=coc
 au BufNewFile,BufRead *.ult set filetype=ultimate
 au BufNewFile,BufRead *.lc set filetype=lambda
@@ -440,6 +519,8 @@ au BufNewFile,BufRead *.lscm set filetype=lispell
 au BufNewFile,BufRead *.sol set filetype=solidity
 au BufNewFile,BufRead *.eatt set filetype=eatt
 au BufNewFile,BufRead *.eatt set syntax=javascript
+au BufNewFile,BufRead *.fmc set filetype=formcore
+au BufNewFile,BufRead *.fmc set syntax=javascript
 au BufNewFile,BufRead *.fm set filetype=formality
 au BufNewFile,BufRead *.fm set syntax=javascript
 au BufNewFile,BufRead *.fmfm set filetype=fmfm
@@ -489,6 +570,14 @@ au BufNewFile,BufRead *.pwd set noundofile
 au BufNewFile,BufRead *.pwd :nmap <leader>g :<C-U>echo "NOT ALLOWED, THIS IS A PWD FILE! ".v:count1<CR>
 filetype plugin on
 
+" Presentation
+au BufNewFile,BufRead *.talk set filetype=javascript
+au BufNewFile,BufRead *.talk set syntax=javascript
+au BufNewFile,BufRead *.talk syntax region Password start=/^/ end=/$/
+au BufNewFile,BufRead *.talk highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.talk set colorcolumn=0
+filetype plugin on
+
 
 " Scheme
 au BufNewFile,BufRead *.scm set nolisp
@@ -515,7 +604,7 @@ au BufNewFile,BufRead *.scm set nolisp
 
 set undofile
 set undodir=~/.vim/undo
-set foldlevel=0
+set foldlevel=12
 au Syntax * normal zR
 
 set formatoptions=cql
