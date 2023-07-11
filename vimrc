@@ -339,15 +339,21 @@ function! SaveVisibleLines(dest)
 endfunction
 
 function! FillHoles()
-    " Save changes to the buffer
-    exec 'w'
+    " Check if unnamed buffer, then save as '.prompt'; if buffer named but not saved, save the buffer.
+    if (bufname('%') == '')
+        let l:tmpFile = ".prompt"
+        exec "w " . l:tmpFile
+    else
+        exec 'w'
+        let l:tmpFile = expand('%:p') 
+    endif
     
     " Save visible lines of current file to '.fill.tmp'
     call SaveVisibleLines('.fill.tmp')
 
-    " Executes 'holefill' on the current file, and 'fill.tmp'
-    exec '!holefill ' . expand('%:p') . ' .fill.tmp'
-
+    " Executes 'holefill' on the source file, and '.fill.tmp'  
+    exec '!holefill ' . l:tmpFile . ' .fill.tmp'
+    
     " Delete temporary file
     exec '!rm .fill.tmp'
     
