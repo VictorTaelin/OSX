@@ -164,7 +164,6 @@ let g:ctrlp_by_filename = 0
     \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
     \ ':!time cc %<cr>')
 
-
 :nnoremap <expr> R ':<C-u>!clear<cr>:w!<cr>'.(
     \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
     \ expand('%:t')=='test.js' ? ':!mocha<cr>' :
@@ -374,9 +373,6 @@ endfunction
 
 nnoremap <leader>G :!clear<CR>:call FillHoles(0)<CR>
 nnoremap <leader>g :!clear<CR>:call FillHoles(1)<CR>
-
-
-
 
 
 
@@ -603,6 +599,14 @@ au BufNewFile,BufRead *.pwd set colorcolumn=0
 au BufNewFile,BufRead *.pwd set noundofile
 au BufNewFile,BufRead *.pwd :nmap <leader>g :<C-U>echo "NOT ALLOWED, THIS IS A PWD FILE! ".v:count1<CR>
 au BufNewFile,BufRead *.pwd :nmap <leader>G :<C-U>echo "NOT ALLOWED, THIS IS A PWD FILE! ".v:count1<CR>
+filetype plugin on
+
+" Presentation
+au BufNewFile,BufRead *.talk set filetype=javascript
+au BufNewFile,BufRead *.talk set syntax=javascript
+au BufNewFile,BufRead *.talk syntax region Password start=/^/ end=/$/
+au BufNewFile,BufRead *.talk highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.talk set colorcolumn=0
 filetype plugin on
 
 " Presentation
