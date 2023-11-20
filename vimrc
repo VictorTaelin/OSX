@@ -128,7 +128,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='ultimate'   ? ':!time ult %<cr>' :
     \ &ft=='lambda'     ? ':!time absal %<cr>' :
     \ &ft=='javascript' ? ':!time node %<cr>' :
-    \ &ft=='typescript' ? ':!time deno --unstable run --allow-all %<cr>' :
+    \ &ft=='typescript' ? ':!time ts-node --skip-project %<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
     \ &ft=='escoc'      ? ':!time escoc %:r<cr>' :
     \ &ft=='eatt'       ? ':!time eatt -itneTNRx %:r<cr>' :
@@ -143,6 +143,9 @@ let g:ctrlp_by_filename = 0
     \ &ft=='lambolt'    ? ':!time hvm % ts<cr>' :
     "\ &ft=='hvm'        ? ':!/usr/bin/time -l -h hvm run -t 1 -c -f % "(Main '.v:count1.')"<cr>' :
     \ &ft=='hvm'        ? ':!/usr/bin/time -l -h hvm run -t 1 -c -f % "(Main)"<cr>' :
+    "\ &ft=='hvm2'       ? ':!hvm-lang compile % >> .tmp.hvmc; /usr/bin/time -l -h hvmc run .tmp.hvmc -s; rm .tmp.hvmc<cr>' :
+    \ &ft=='hvm2'       ? ':!hvm-lang run %<cr>' :
+    \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc run % -s<cr>' :
     \ &ft=='sic'        ? ':!time sic -s %<cr>' :
     \ &ft=='ic'        ? ':!time ic %<cr>' :
     \ &ft=='itt'       ? ':!time itt %<cr>' :
@@ -153,13 +156,14 @@ let g:ctrlp_by_filename = 0
     \ &ft=='lean'       ? ':!time lean %<cr>' :
     \ &ft=='coq'        ? ':!time coqc %<cr>' :
     \ &ft=='c'          ? ':!clang % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cuda'       ? ':!echo "Sending to Windows..."; rsync % windows:~/cuda<CR>:!echo "Compiling..."; ssh windows /usr/local/cuda/bin/nvcc -arch=sm_70 -O3 /home/v/cuda/% -o /home/v/cuda/%:r<CR>:!echo "Running..."; ssh windows time /home/v/cuda/%:r<cr>' :
+    \ &ft=='cuda'       ? ':!echo "Sending to Higher Order Computer."; rsync *.cu taelin@HOC:/home/taelin/cuda<CR>:!echo "Compiling..."; ssh taelin@HOC /usr/local/cuda-12.2/bin/nvcc -arch=compute_89 -code=sm_89 -Wno-deprecated-gpu-targets -w -O3 /home/taelin/cuda/% -o /home/taelin/cuda/%:r<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/cuda/%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -std=c++11 -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='agda'       ? ':!time agda -i src %<cr>' :
     \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
     \ &ft=='sh'         ? ':!time ./%<cr>' :
     \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
     \ ':!time cc %<cr>')
+
 
 :nnoremap <expr> R ':<C-u>!clear<cr>:w!<cr>'.(
     \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
@@ -180,7 +184,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='dvl'        ? ':!dvl run %<cr>' :
     \ &ft=='lambda'     ? ':!time absal -s %<cr>' :
     \ &ft=='javascript' ? ':!npm run build<cr>' :
-    \ &ft=='typescript' ? ':!time deno --unstable run --reload --allow-all %<cr>' :
+    \ &ft=='typescript' ? ':!time ts-node -r esm %<cr>' :
     "\ &ft=='typescript' ? ':!npm run build<cr>' :
     \ &ft=='html'       ? ':!npm run build<cr>' :
     \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
@@ -192,6 +196,8 @@ let g:ctrlp_by_filename = 0
     \ &ft=='lambolt'    ? ':!time lam % c<cr>' :
     "\ &ft=='hvm'        ? ':!hvm compile %; cd %:r; cargo build --release; /usr/bin/time -l -h ./target/release/%:r run -c true "(Main '.v:count1.')"<cr>' :
     \ &ft=='hvm'        ? ':!hvm compile %; cd %:r; cargo build --release; /usr/bin/time -l -h ./target/release/%:r run -c true "(Main)"<cr>' :
+    \ &ft=='hvm2'       ? ':!/usr/bin/time hvm-lang compile % > %:r.hvmc<cr>' :
+    \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc compile %; time ./%:r<cr>' :
     "\ &ft=='formality'  ? ':!time fmio %:r<cr>' :
     \ &ft=='eac'        ? ':!time eac %:r<cr>' :
     \ &ft=='formcore'   ? ':!time fmio %:r<cr>' :
@@ -298,12 +304,18 @@ let g:ctrlp_by_filename = 0
 
 
 
-:nnoremap <expr> <leader>m ':w!<cr>:!clear; time fixit %<cr>'
-:nnoremap <expr> <leader>M ':w!<cr>:!clear; time fixit % 4<cr>'
+":nnoremap <expr> <leader>m ':w!<cr>:!clear; time fixit %<cr>'
+":nnoremap <expr> <leader>M ':w!<cr>:!clear; time fixit % 4<cr>'
 ":nnoremap <expr> <leader>G ':w!<cr>:!clear; time chatgpt % 4<cr>'
 
-":nnoremap <expr> <leader>m ':w!<cr>:!clear; cargo install --path .<cr>'
-":nnoremap <expr> <leader>M ':w!<cr>:!clear; cargo install --debug --path .<cr>'
+:nnoremap <expr> <leader>m ':w!<cr>:!clear; cargo install --path .<cr>'
+
+:nnoremap <expr> <leader>m ':!clear<cr>:w!<cr>'.(
+    \ &ft=='rust'       ? ':!cargo install --path .<cr>' :
+    \ &ft=='typescript' ? ':!tsc<cr>' :
+    \ ':!time cc %<cr>')
+
+:nnoremap <expr> <leader>M ':w!<cr>:!clear; cargo install --debug --path .<cr>'
 ":nnoremap <expr> <leader>M ':w!<cr>:!clear; ./bootstrap.sh<cr>'
 ":nnoremap <expr> <leader>w ':w!<cr>:!clear; npm run build<cr>:!osascript ~/dev/me/refresh_chrome.applescript &<cr>'
 :nnoremap <expr> <leader>w ':w!<cr>:!clear; node /Users/v/vic/dev/Kind/web/build.js<cr>:!osascript ~/vic/dev/refresh_chrome.applescript &<cr>'
@@ -338,25 +350,35 @@ function! SaveVisibleLines(dest)
   call writefile(l:visibleLines, a:dest)
 endfunction
 
-function! FillHoles()
-    " Save changes to the buffer
-    exec 'w'
-    
-    " Save visible lines of current file to '.fill.tmp'
-    call SaveVisibleLines('.fill.tmp')
+function! FillHoles(fast)
+  if (bufname('%') == '')
+      let l:tmpFile = tempname()
+      exec "w " . l:tmpFile
+  else
+      exec 'w'
+      let l:tmpFile = expand('%:p') 
+  endif
 
-    " Executes 'holefill' on the current file, and 'fill.tmp'
-    exec '!holefill ' . expand('%:p') . ' .fill.tmp'
+  call SaveVisibleLines('.fill.tmp')
 
-    " Delete temporary file
-    exec '!rm .fill.tmp'
-    
-    " Reload the file
-    exec 'edit!'
+  if a:fast
+    exec '!holefill ' . l:tmpFile . ' .fill.tmp --fast'
+  else
+    exec '!holefill ' . l:tmpFile . ' .fill.tmp'
+  endif
+
+  exec '!rm .fill.tmp'
+
+  exec 'edit!'
 endfunction
 
-" Set key mapping to the new function
-nnoremap <leader>g :!clear<CR>:call FillHoles()<CR>
+nnoremap <leader>G :!clear<CR>:call FillHoles(0)<CR>
+nnoremap <leader>g :!clear<CR>:call FillHoles(1)<CR>
+
+
+
+
+
 
 " --------------------------------------------------------------------------
 
@@ -553,6 +575,12 @@ au BufNewFile,BufRead *.hvm set filetype=hvm
 au BufNewFile,BufRead *.hvm set syntax=javascript
 au BufNewFile,BufRead *.hvm syntax region Password start=/^\/\/\~/ end=/$/ " HVM hidden comments
 au BufNewFile,BufRead *.hvm highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.hvmc set filetype=hvmc
+au BufNewFile,BufRead *.hvmc set syntax=javascript
+au BufNewFile,BufRead *.hvm2 set filetype=hvm2
+au BufNewFile,BufRead *.hvm2 set syntax=javascript
+au BufNewFile,BufRead *.hvm2 syntax region Password start=/^\/\/\~/ end=/$/ " HVM2 hidden comments
+au BufNewFile,BufRead *.hvm2 highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.pwd set syntax=javascript
 au BufNewFile,BufRead *.pvt set syntax=javascript
 
@@ -574,6 +602,7 @@ au BufNewFile,BufRead *.pwd highlight Password ctermfg=red guifg=red ctermbg=red
 au BufNewFile,BufRead *.pwd set colorcolumn=0
 au BufNewFile,BufRead *.pwd set noundofile
 au BufNewFile,BufRead *.pwd :nmap <leader>g :<C-U>echo "NOT ALLOWED, THIS IS A PWD FILE! ".v:count1<CR>
+au BufNewFile,BufRead *.pwd :nmap <leader>G :<C-U>echo "NOT ALLOWED, THIS IS A PWD FILE! ".v:count1<CR>
 filetype plugin on
 
 " Presentation
@@ -722,5 +751,25 @@ augroup END
 
 
 " agda
+"let maplocalleader = "\\"
+"let g:agda_extraincpaths = ["/Users/v/vic/dev/agda"]
+
 let maplocalleader = "\\"
-let g:agda_extraincpaths = ["/Users/v/vic/dev/agda"]
+"command! -buffer -nargs=0 AgdaLoad call AgdaLoad(v:false)
+"command! -buffer -nargs=0 AgdaVersion call AgdaVersion(v:false)
+"command! -buffer -nargs=0 AgdaReload silent! make!|redraw!
+"command! -buffer -nargs=0 AgdaRestartAgda exec s:python_cmd 'AgdaRestart()'
+"command! -buffer -nargs=0 AgdaShowImplicitArguments exec s:python_cmd "sendCommand('ShowImplicitArgs True')"
+"command! -buffer -nargs=0 AgdaHideImplicitArguments exec s:python_cmd "sendCommand('ShowImplicitArgs False')"
+"command! -buffer -nargs=0 AgdaToggleImplicitArguments exec s:python_cmd "sendCommand('ToggleImplicitArgs')"
+"command! -buffer -nargs=0 AgdaConstraints exec s:python_cmd "sendCommand('Cmd_constraints')"
+"command! -buffer -nargs=0 AgdaMetas exec s:python_cmd "sendCommand('Cmd_metas')"
+"command! -buffer -nargs=0 AgdaSolveAll exec s:python_cmd "sendCommand('Cmd_solveAll')"
+"command! -buffer -nargs=1 AgdaShowModule call AgdaShowModule(<args>)
+"command! -buffer -nargs=1 AgdaWhyInScope call AgdaWhyInScope(<args>)
+"command! -buffer -nargs=1 AgdaSetRewriteMode exec s:python_cmd "setRewriteMode('<args>')"
+"command! -buffer -nargs=0 AgdaSetRewriteModeAsIs exec s:python_cmd "setRewriteMode('AsIs')"
+"command! -buffer -nargs=0 AgdaSetRewriteModeNormalised exec s:python_cmd "setRewriteMode('Normalised')"
+"command! -buffer -nargs=0 AgdaSetRewriteModeSimplified exec s:python_cmd "setRewriteMode('Simplified')"
+"command! -buffer -nargs=0 AgdaSetRewriteModeHeadNormal exec s:python_cmd "setRewriteMode('HeadNormal')"
+"command! -buffer -nargs=0 AgdaSetRewriteModeInstantiated exec s:python_cmd "setRewriteMode('Instantiated')"
