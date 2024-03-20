@@ -113,50 +113,36 @@ let g:ctrlp_by_filename = 0
 :nnoremap <expr> r ':<C-u>!clear<cr>:w!<cr>'.(
     \ &ft=='caramel'    ? ':!time mel main<cr>' :
     \ &ft=='ocaml'      ? ':!ocamlc -o %:r %<cr>:!./%:r<cr>' :
-    \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
     \ &ft=='python'     ? ':!time python3 %<cr>' :
     \ &ft=='coc'        ? ':!time (coc type %:r; coc norm %:r)<cr>' :
     \ &ft=='scheme'     ? ':!time scheme --script %<cr>' :
     \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
     \ &ft=='racket'     ? ':!racket %<cr>' :
     \ &ft=='haskell'    ? ':!time runghc --ghc-arg=-freverse-errors %<cr>' :
-    \ &ft=='sway'       ? ':!time forc test --release --offline<cr>' :
-    \ &ft=='rust'       ? ':!time RUST_BACKTRACE=1 cargo lrun<cr>' :
+    \ &ft=='rust'       ? ':!time RUST_BACKTRACE=1 cargo run<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
-    \ &ft=='dvl'        ? ':!dvl run %<cr>' :
-    \ &ft=='ultimate'   ? ':!time ult %<cr>' :
     \ &ft=='lambda'     ? ':!time absal %<cr>' :
     \ &ft=='javascript' ? ':!time node %<cr>' :
     \ &ft=='typescript' ? ':!time ts-node --skip-project %<cr>' :
     \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
-    \ &ft=='escoc'      ? ':!time escoc %:r<cr>' :
-    \ &ft=='eatt'       ? ':!time eatt -itneTNRx %:r<cr>' :
-    \ &ft=='eac'        ? ':!time eac %:r<cr>' :
-    \ &ft=='fmfm'       ? ':!time fmjs %<cr>' :
-    \ &ft=='formality'  ? ':!time fmjs %<cr>' :
-    \ &ft=='formcore'   ? ':!time fmc %<cr>' :
     \ &ft=='kind'       ? ':!time kind %<cr>' :
-    \ &ft=='kind2'      ? ':!time kind2 check %<cr>' :
-    \ &ft=='type'       ? ':!time kind2 derive %<cr>' :
-    \ &ft=='kindelia'   ? ':!time kindelia test %<cr>' :
-    \ &ft=='lambolt'    ? ':!time hvm % ts<cr>' :
-    "\ &ft=='hvm'        ? ':!/usr/bin/time -l -h hvm run -t 1 -c -f % "(Main '.v:count1.')"<cr>' :
-    \ &ft=='hvm'        ? ':!/usr/bin/time -l -h hvm run -t 1 -c -f % "(Main)"<cr>' :
-    "\ &ft=='hvm2'       ? ':!hvm-lang compile % >> .tmp.hvmc; /usr/bin/time -l -h hvmc run .tmp.hvmc -s; rm .tmp.hvmc<cr>' :
-    \ &ft=='hvm2'       ? ':!hvm-lang run %<cr>' :
-    \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc run % -s<cr>' :
+    \ &ft=='hvm1'       ? ':!/usr/bin/time -l -h hvm1 run -t 1 -c -f % "(Main)"<cr>' :
+    \ &ft=='hvm2'       ? ':!/usr/bin/time hvml run % -s -m 32G<cr>' :
+    \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc run % -s -m 32G<cr>' :
+    \ &ft=='taelang'    ? ':!/usr/bin/time taelang check %:r<cr>' :
+    \ &ft=='icc'        ? ':!/usr/bin/time icc check %:r<cr>' :
+    \ &ft=='kind2'      ? ':!/usr/bin/time kind2 check %:r<cr>' :
+    \ &ft=='markdown'   ? ':StartPresenting<cr>' :
     \ &ft=='sic'        ? ':!time sic -s %<cr>' :
-    \ &ft=='ic'        ? ':!time ic %<cr>' :
-    \ &ft=='itt'       ? ':!time itt %<cr>' :
-    \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
+    \ &ft=='itt'        ? ':!time itt %<cr>' :
     \ &ft=='swift'      ? ':!time swift %<cr>' :
     \ &ft=='solidity'   ? ':!run_solidity %<cr>' :
     \ &ft=='idris2'     ? ':!time idris2 % -o %:r<cr>:!time ./build/exec/%:r<cr>' :
     \ &ft=='lean'       ? ':!time lean %<cr>' :
     \ &ft=='coq'        ? ':!time coqc %<cr>' :
     \ &ft=='c'          ? ':!clang % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cuda'       ? ':!echo "Sending to Higher Order Computer."; rsync *.cu taelin@HOC:/home/taelin/cuda<CR>:!echo "Compiling..."; ssh taelin@HOC /usr/local/cuda-12.2/bin/nvcc -arch=compute_89 -code=sm_89 -Wno-deprecated-gpu-targets -w -O3 /home/taelin/cuda/% -o /home/taelin/cuda/%:r<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/cuda/%:r<cr>' :
+    \ &ft=='cuda'       ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/hvm2.cu<CR>:!echo "Compiling..."; ssh taelin@HOC /usr/local/cuda-12.2/bin/nvcc -arch=compute_89 -code=sm_89 -Wno-deprecated-gpu-targets -w -O3 /home/taelin/cuda/hvm2.cu -o /home/taelin/cuda/hvm2<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/cuda/hvm2<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -std=c++11 -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='agda'       ? ':!time agda -i src %<cr>' :
     \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
@@ -167,145 +153,35 @@ let g:ctrlp_by_filename = 0
 :nnoremap <expr> R ':<C-u>!clear<cr>:w!<cr>'.(
     \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
     \ expand('%:t')=='test.js' ? ':!mocha<cr>' :
-    \ &ft=='caramel'    ? ':!time mel main<cr>' :
     \ &ft=='ocaml'      ? ':!ocamlc -o %:r %<cr>:!./%:r<cr>' :
-    \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
     \ &ft=='python'     ? ':!time python %<cr>' :
     \ &ft=='coc'        ? ':!time (coc type %:r; coc norm %:r)<cr>' :
     \ &ft=='scheme'     ? ':!csc %<cr>:!time ./%:r<cr>' :
     \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
     \ &ft=='racket'     ? ':!racket %<cr>' :
-    "\ &ft=='haskell'    ? ':!stack run<cr>' :
     \ &ft=='haskell'    ? ':!time ghc -O2 % -o .tmp; time ./.tmp 0; rm %:r.hi %:r.o .tmp<cr>' :
-    \ &ft=='rust'       ? ':!time cargo lrun --release<cr>' :
+    \ &ft=='rust'       ? ':!time cargo run --release<cr>' :
     \ &ft=='go'         ? ':!time go run %<cr>' :
     \ &ft=='purescript' ? ':!pulp run <cr>' :
-    \ &ft=='dvl'        ? ':!dvl run %<cr>' :
     \ &ft=='lambda'     ? ':!time absal -s %<cr>' :
     \ &ft=='javascript' ? ':!npm run build<cr>' :
     \ &ft=='typescript' ? ':!time ts-node -r esm %<cr>' :
-    "\ &ft=='typescript' ? ':!npm run build<cr>' :
-    \ &ft=='html'       ? ':!npm run build<cr>' :
-    \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
-    \ &ft=='fmfm'       ? ':!time fmjs %:r --run<cr>' :
-    \ &ft=='formality'  ? ':!time fmjs %:r --run<cr>' :
     \ &ft=='kind'       ? ':!time kind ' . substitute(expand("%:r"),"/",".","g") . ' --norm<cr>' :
-    \ &ft=='kind2'      ? ':!time kind2 eval %<cr>' :
     \ &ft=='kindelia'   ? ':!time kindelia serialize %<cr>' :
-    \ &ft=='lambolt'    ? ':!time lam % c<cr>' :
-    "\ &ft=='hvm'        ? ':!hvm compile %; cd %:r; cargo build --release; /usr/bin/time -l -h ./target/release/%:r run -c true "(Main '.v:count1.')"<cr>' :
-    \ &ft=='hvm'        ? ':!hvm compile %; cd %:r; cargo build --release; /usr/bin/time -l -h ./target/release/%:r run -c true "(Main)"<cr>' :
-    \ &ft=='hvm2'       ? ':!/usr/bin/time hvm-lang compile % > %:r.hvmc<cr>' :
-    \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc compile %; time ./%:r<cr>' :
-    "\ &ft=='formality'  ? ':!time fmio %:r<cr>' :
-    \ &ft=='eac'        ? ':!time eac %:r<cr>' :
-    \ &ft=='formcore'   ? ':!time fmio %:r<cr>' :
-    \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
+    \ &ft=='hvm1'       ? ':!hvm1 compile %; cd %:r1; cargo build --release; /usr/bin/time -l -h ./target/release/%:r run -c true "(Main)"<cr>' :
+    \ &ft=='hvml'       ? ':!/usr/bin/time hvml compile % > %:r.hvmc; /usr/bin/time hvmc compile %:r.hvmc; time ./%:r -s<cr>' :
+    \ &ft=='hvm2'       ? ':!/usr/bin/time hvml compile % > %:r.hvmc; /usr/bin/time hvmc compile %:r.hvmc; time ./%:r -s<cr>' :
+    \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc compile %; time ./%:r -s<cr>' :
+    \ &ft=='icc'        ? ':!/usr/bin/time icc run %:r<cr>' :
+    \ &ft=='kind2'      ? ':!/usr/bin/time kind2 normal %:r<cr>' :
     \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
-    \ &ft=='ic'         ? ':!time ic %<cr>' :
-    \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
-    \ &ft=='swift'      ? ':!time swift %<cr>' :
-    \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
     \ &ft=='idris2'     ? ':!idris2 % -o %:r<cr>:!time ./build/exec/%:r<cr>' :
     \ &ft=='c'          ? ':!clang -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='agda'       ? ':!agda -i src %<cr>' :
     \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
-    \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
     \ ':!time cc %<cr>')
-
-:nnoremap <expr> <leader>r ':!clear<cr>:w!<cr>'.(
-    \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
-    \ expand('%:t')=='test.js' ? ':!mocha<cr>' :
-    \ &ft=='caramel'    ? ':!time mel main<cr>' :
-    \ &ft=='ocaml'      ? ':!ocamlc -o %:r %<cr>:!./%:r<cr>' :
-    \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
-    \ &ft=='python'     ? ':!time python %<cr>' :
-    \ &ft=='coc'        ? ':!time (coc type %:r; coc norm %:r)<cr>' :
-    \ &ft=='scheme'     ? ':!csc %<cr>:!time ./%:r<cr>' :
-    \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
-    \ &ft=='racket'     ? ':!racket %<cr>' :
-    \ &ft=='haskell'    ? ':!stack run<cr>' :
-    \ &ft=='rust'       ? ':!time cargo +nightly lrun --release<cr>' :
-    \ &ft=='go'         ? ':!time go run %<cr>' :
-    \ &ft=='purescript' ? ':!pulp run <cr>' :
-    \ &ft=='dvl'        ? ':!dvl run %<cr>' :
-    \ &ft=='lambda'     ? ':!time absal -s %<cr>' :
-    \ &ft=='javascript' ? ':!npm run build<cr>' :
-    \ &ft=='typescript' ? ':!npm run build<cr>' :
-    \ &ft=='html'       ? ':!npm run build<cr>' :
-    \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fm %<cr>' :
-    \ &ft=='formcore'   ? ':!time fmcjs %:r<cr>' :
-    \ &ft=='hvm'        ? ':!cargo install --path .<cr>' :
-    \ &ft=='kind'       ? ':!node /Users/v/vic/dev/Kind/web/build.js %:r<cr>' :
-    \ &ft=='kind2'      ? ':!time kind2 run %<cr>' :
-    \ &ft=='eac'        ? ':!time eac %:r<cr>' :
-    \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
-    \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
-    \ &ft=='ic'         ? ':!time ic %<cr>' :
-    \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
-    \ &ft=='swift'      ? ':!time swift %<cr>' :
-    \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
-    \ &ft=='idris2'     ? ':!idris2 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='c'          ? ':!clang -O3 -Wall % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='agda'       ? ':!agda -i src %<cr>' :
-    \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
-    \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
-    \ ':!time cc %<cr>')
-
-:nnoremap <expr> <leader>R ':!clear<cr>:w!<cr>'.(
-    \ expand('%:p')=='/Users/v/mist/main.js' ? ':!electron . --rpc ~/Library/Ethereum/testnet/geth.ipc<cr>' :
-    \ expand('%:t')=='test.js' ? ':!mocha<cr>' :
-    \ &ft=='caramel'    ? ':!time mel main<cr>' :
-    \ &ft=='ocaml'      ? ':!ocamlc -o %:r %<cr>:!./%:r<cr>' :
-    \ &ft=='factor'     ? ':!~/factor/factor %<cr>' :
-    \ &ft=='python'     ? ':!time python %<cr>' :
-    \ &ft=='coc'        ? ':!time (coc type %:r; coc norm %:r)<cr>' :
-    \ &ft=='scheme'     ? ':!csc %<cr>:!time ./%:r<cr>' :
-    \ &ft=='elm'        ? '<esc>:!clear<cr>:w!<cr>:!elm % -r elm-runtime.js<cr>:!osascript ~/.vim/refresh.applescript &<cr>' :
-    \ &ft=='racket'     ? ':!racket %<cr>' :
-    \ &ft=='haskell'    ? ':!stack run<cr>' :
-    \ &ft=='rust'       ? ':!time cargo +nightly run --release<cr>' :
-    \ &ft=='go'         ? ':!time go run %<cr>' :
-    \ &ft=='purescript' ? ':!pulp run <cr>' :
-    \ &ft=='dvl'        ? ':!dvl run %<cr>' :
-    \ &ft=='lambda'     ? ':!time absal -s %<cr>' :
-    \ &ft=='javascript' ? ':!npm run build<cr>' :
-    \ &ft=='typescript' ? ':!npm run build<cr>' :
-    \ &ft=='html'       ? ':!npm run build<cr>' :
-    \ &ft=='eatt'       ? ':!time eatt %:r<cr>' :
-    \ &ft=='formality'  ? ':!time fmio %:r<cr>' :
-    \ &ft=='formcore'   ? ':!time fmcrun main<cr>' :
-    \ &ft=='kind'       ? ':!node /Users/v/vic/dev/Kind/web/build.js %:r<cr>' :
-    \ &ft=='eac'        ? ':!time eac %:r<cr>' :
-    \ &ft=='moon'       ? ':!time moon run %:r<cr>' :
-    \ &ft=='sic'        ? ':!time sic -s -B %<cr>' :
-    \ &ft=='ic'         ? ':!time ic %<cr>' :
-    \ &ft=='morte'      ? ':!time echo $(cat %) \| morte<cr>' :
-    \ &ft=='swift'      ? ':!time swift %<cr>' :
-    \ &ft=='solidity'   ? ':!truffle deploy<cr>' :
-    \ &ft=='idris2'     ? ':!idris2 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='c'          ? ':!clang -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
-    \ &ft=='agda'       ? ':!agda -i src %<cr>' :
-    \ &ft=='ls'         ? ':!lsc -c %<cr>:!node %:r.js<cr>' :
-    \ &ft=='lispell'    ? ':!node ~/Viclib/lispedia/bin/lis.js reduce %:r<cr>' :
-    \ ':!time cc %<cr>')
-
-:nnoremap <expr> <leader>p ':!clear<cr>:w!<cr>'.(
-    \ &ft=='kind2'      ? ':!time kindai %<cr>' :
-    \ ':!time cc %<cr>')
-
-
-
-":nnoremap <expr> <leader>m ':w!<cr>:!clear; time fixit %<cr>'
-":nnoremap <expr> <leader>M ':w!<cr>:!clear; time fixit % 4<cr>'
-":nnoremap <expr> <leader>G ':w!<cr>:!clear; time chatgpt % 4<cr>'
 
 :nnoremap <expr> <leader>m ':w!<cr>:!clear; cargo install --path .<cr>'
 
@@ -315,17 +191,10 @@ let g:ctrlp_by_filename = 0
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> <leader>M ':w!<cr>:!clear; cargo install --debug --path .<cr>'
-":nnoremap <expr> <leader>M ':w!<cr>:!clear; ./bootstrap.sh<cr>'
-":nnoremap <expr> <leader>w ':w!<cr>:!clear; npm run build<cr>:!osascript ~/dev/me/refresh_chrome.applescript &<cr>'
 :nnoremap <expr> <leader>w ':w!<cr>:!clear; node /Users/v/vic/dev/Kind/web/build.js<cr>:!osascript ~/vic/dev/refresh_chrome.applescript &<cr>'
 :nnoremap <expr> <leader>x ':x!<cr>'
 :nnoremap <expr> <leader>q ':q!<cr>'
 :nnoremap <leader>b :put!='----------'<cr>:put!=strftime('%Y-%m-%d')<cr>
-":map <leader>q :xa!<cr>
-
-
-":nmap <leader>g :<C-U>exe "CreateCompletion ".v:count1<CR>
-
 
 " --------------------------------------------------------------------------
 
@@ -349,7 +218,7 @@ function! SaveVisibleLines(dest)
   call writefile(l:visibleLines, a:dest)
 endfunction
 
-function! FillHoles(fast)
+function! FillHoles(model)
   if (bufname('%') == '')
       let l:tmpFile = tempname()
       exec "w " . l:tmpFile
@@ -357,32 +226,18 @@ function! FillHoles(fast)
       exec 'w'
       let l:tmpFile = expand('%:p') 
   endif
-
   call SaveVisibleLines('.fill.tmp')
-
-  if a:fast
-    exec '!holefill ' . l:tmpFile . ' .fill.tmp --fast'
-  else
-    exec '!holefill ' . l:tmpFile . ' .fill.tmp'
-  endif
-
+  exec '!NODE_NO_WARNINGS=1 holefill ' . l:tmpFile . ' .fill.tmp ' . a:model
   exec '!rm .fill.tmp'
-
   exec 'edit!'
 endfunction
 
-nnoremap <leader>G :!clear<CR>:call FillHoles(0)<CR>
-nnoremap <leader>g :!clear<CR>:call FillHoles(1)<CR>
-
-
+nnoremap <leader>g :!clear<CR>:call FillHoles('gpt-4-0125-preview')<CR>
+nnoremap <leader>G :!clear<CR>:call FillHoles('gpt-4-32k-0314')<CR>
+nnoremap <leader>h :!clear<CR>:call FillHoles('claude-3-haiku-20240307')<CR>
+nnoremap <leader>H :!clear<CR>:call FillHoles('claude-3-opus-20240229')<CR>
 
 " --------------------------------------------------------------------------
-
-
-
-
-
-
 
 " GPT-3 binding from https://github.com/tom-doerr/vim_codex
 ":nmap <leader>g :<C-U>exe "CreateCompletion ".v:count1<CR>
@@ -559,6 +414,8 @@ au BufNewFile,BufRead *.kind2 set filetype=kind2
 au BufNewFile,BufRead *.kind2 set syntax=javascript
 au BufNewFile,BufRead *.type set filetype=type
 au BufNewFile,BufRead *.type set syntax=javascript
+au BufNewFile,BufRead *.bend set filetype=bend
+au BufNewFile,BufRead *.bend set syntax=python
 au BufNewFile,BufRead *.kind set filetype=kind
 au BufNewFile,BufRead *.kind set syntax=javascript
 au BufNewFile,BufRead *.kindelia set filetype=kindelia
@@ -567,16 +424,28 @@ au BufNewFile,BufRead *.kdl set filetype=kindelia
 au BufNewFile,BufRead *.kdl set syntax=javascript
 au BufNewFile,BufRead *.bolt set filetype=lambolt
 au BufNewFile,BufRead *.bolt set syntax=javascript
-au BufNewFile,BufRead *.hvm set filetype=hvm
+au BufNewFile,BufRead *.hvm set filetype=hvm1
 au BufNewFile,BufRead *.hvm set syntax=javascript
 au BufNewFile,BufRead *.hvm syntax region Password start=/^\/\/\~/ end=/$/ " HVM hidden comments
 au BufNewFile,BufRead *.hvm highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.hvm1 set filetype=hvm1
+au BufNewFile,BufRead *.hvm1 set syntax=javascript
+au BufNewFile,BufRead *.hvm1 syntax region Password start=/^\/\/\~/ end=/$/ " HVM hidden comments
+au BufNewFile,BufRead *.hvm1 highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.hvmc set filetype=hvmc
 au BufNewFile,BufRead *.hvmc set syntax=javascript
+au BufNewFile,BufRead *.hvml set filetype=hvml
+au BufNewFile,BufRead *.hvml set syntax=javascript
+au BufNewFile,BufRead *.hvml syntax region Password start=/^\/\/\~/ end=/$/ " hvml hidden comments
+au BufNewFile,BufRead *.hvml highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.hvm2 set filetype=hvm2
 au BufNewFile,BufRead *.hvm2 set syntax=javascript
-au BufNewFile,BufRead *.hvm2 syntax region Password start=/^\/\/\~/ end=/$/ " HVM2 hidden comments
+au BufNewFile,BufRead *.hvm2 syntax region Password start=/^\/\/\~/ end=/$/ " hvm2 hidden comments
 au BufNewFile,BufRead *.hvm2 highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.tl set filetype=taelang
+au BufNewFile,BufRead *.tl set syntax=javascript
+au BufNewFile,BufRead *.icc set filetype=icc
+au BufNewFile,BufRead *.icc set syntax=javascript
 au BufNewFile,BufRead *.pwd set syntax=javascript
 au BufNewFile,BufRead *.pvt set syntax=javascript
 
@@ -692,25 +561,6 @@ endif
 set runtimepath^=~/.vim/bundle/ag
 
 
-
-
-
-
-
-
-" purescript
-":map <leader>mt :PSCIDEtype<CR>
-":map <leader>mi :PSCIDEimportIdentifier<CR>
-":map <leader>mat :PSCIDEaddTypeAnnotation<CR>
-":map <leader>mai :PSCIDEaddImportQualifications<CR>
-":map <leader>mri :PSCIDEremoveImportQualifications<CR>
-":map <leader>ms :PSCIDEapplySuggestion<CR>
-":map <leader>mc :PSCIDEcaseSplit<CR>
-":map <leader>mp :PSCIDEpursuit<CR>
-":map <leader>mr :PSCIDEload<CR>
-":map <leader>mf :PSCIDEaddClause<CR>
-
-
 " https://gist.github.com/bignimbus/1da46a18416da4119778
 " Set the title of the Terminal to the currently open file
 function! SetTerminalTitle()
@@ -726,7 +576,9 @@ function! SetTerminalTitle()
 endfunction
 autocmd BufEnter * call SetTerminalTitle()
 
+let g:markdown_fenced_languages = ['javascript', 'typescript', 'python', 'haskell', 'c']
 
+" ###################################
 
 " https://vi.stackexchange.com/questions/2232/how-can-i-use-vim-as-a-hex-editor
 " vim -b : edit binary using xxd-format!
@@ -753,27 +605,5 @@ augroup Binary
   au BufWritePost *.bin set nomod | endif
 augroup END
 
-
-" agda
-"let maplocalleader = "\\"
-"let g:agda_extraincpaths = ["/Users/v/vic/dev/agda"]
-
 let maplocalleader = "\\"
-"command! -buffer -nargs=0 AgdaLoad call AgdaLoad(v:false)
-"command! -buffer -nargs=0 AgdaVersion call AgdaVersion(v:false)
-"command! -buffer -nargs=0 AgdaReload silent! make!|redraw!
-"command! -buffer -nargs=0 AgdaRestartAgda exec s:python_cmd 'AgdaRestart()'
-"command! -buffer -nargs=0 AgdaShowImplicitArguments exec s:python_cmd "sendCommand('ShowImplicitArgs True')"
-"command! -buffer -nargs=0 AgdaHideImplicitArguments exec s:python_cmd "sendCommand('ShowImplicitArgs False')"
-"command! -buffer -nargs=0 AgdaToggleImplicitArguments exec s:python_cmd "sendCommand('ToggleImplicitArgs')"
-"command! -buffer -nargs=0 AgdaConstraints exec s:python_cmd "sendCommand('Cmd_constraints')"
-"command! -buffer -nargs=0 AgdaMetas exec s:python_cmd "sendCommand('Cmd_metas')"
-"command! -buffer -nargs=0 AgdaSolveAll exec s:python_cmd "sendCommand('Cmd_solveAll')"
-"command! -buffer -nargs=1 AgdaShowModule call AgdaShowModule(<args>)
-"command! -buffer -nargs=1 AgdaWhyInScope call AgdaWhyInScope(<args>)
-"command! -buffer -nargs=1 AgdaSetRewriteMode exec s:python_cmd "setRewriteMode('<args>')"
-"command! -buffer -nargs=0 AgdaSetRewriteModeAsIs exec s:python_cmd "setRewriteMode('AsIs')"
-"command! -buffer -nargs=0 AgdaSetRewriteModeNormalised exec s:python_cmd "setRewriteMode('Normalised')"
-"command! -buffer -nargs=0 AgdaSetRewriteModeSimplified exec s:python_cmd "setRewriteMode('Simplified')"
-"command! -buffer -nargs=0 AgdaSetRewriteModeHeadNormal exec s:python_cmd "setRewriteMode('HeadNormal')"
 "command! -buffer -nargs=0 AgdaSetRewriteModeInstantiated exec s:python_cmd "setRewriteMode('Instantiated')"
