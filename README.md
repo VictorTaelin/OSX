@@ -23,3 +23,5 @@ The GPT-3 completion can be toggled by typing a number, then `<leader>g`. The
 number is the amount of tokens to be requested from GPT-3 Codex. In order for it
 to work, the `~/.vim/bundle/vim_codex/python/AUTH.py` file must be edited to
 include the secret key found on https://beta.openai.com/account/api-keys.
+
+Edit: outdated, now I just use https://github.com/VictorTaelin/ai-scripts
