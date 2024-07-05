@@ -1,8 +1,8 @@
 <?xml version="1.1" encoding="UTF-8"?>
 <!DOCTYPE keyboard SYSTEM "file://localhost/System/Library/DTDs/KeyboardLayout.dtd">
 <!--Created by Ukelele version 2.2.1 on 2012-08-19 at 11:46 (BRT)-->
-<!--Last edited by Ukelele version 3.3.0.233 on 2020-06-02 at 09:02 (GMT-3)-->
-<keyboard group="126" id="-6803" name="Vicboard" maxout="2">
+<!--Last edited by Ukelele version 359 on 2023-12-26 at 00:07 (GMT-3)-->
+<keyboard group="126" id="-4065" name="Vicboard" maxout="2">
     <layouts>
         <layout first="0" last="0" mapSet="138" modifiers="30"/>
     </layouts>
@@ -158,21 +158,21 @@
             <key code="0" action="6"/>
             <key code="1" output="S"/>
             <key code="2" output="D"/>
-            <key code="3" output="F"/>
+            <key code="3" action="F"/>
             <key code="4" action="H"/>
-            <key code="5" output="G"/>
+            <key code="5" action="G"/>
             <key code="6" output="Z"/>
-            <key code="7" output="X"/>
+            <key code="7" action="X"/>
             <key code="8" action="C"/>
-            <key code="9" output="V"/>
+            <key code="9" action="V"/>
             <key code="10" output="&#x0022;"/>
-            <key code="11" output="B"/>
+            <key code="11" action="B"/>
             <key code="12" output="Q"/>
             <key code="13" output="W"/>
             <key code="14" action="7"/>
             <key code="15" output="R"/>
             <key code="16" action="16"/>
-            <key code="17" output="T"/>
+            <key code="17" action="T"/>
             <key code="18" output=""/>
             <key code="19" output=""/>
             <key code="20" output="\"/>
@@ -192,10 +192,10 @@
             <key code="34" action="8"/>
             <key code="35" output="P"/>
             <key code="36" output="&#x000D;"/>
-            <key code="37" output="L"/>
+            <key code="37" action="L"/>
             <key code="38" output="J"/>
             <key code="39" output=""/>
-            <key code="40" output="K"/>
+            <key code="40" action="K"/>
             <key code="41" output=":"/>
             <key code="42" output=""/>
             <key code="43" output="&#x003C;"/>
@@ -955,16 +955,18 @@
         <action id="( 1">
             <when state="none" output="("/>
             <when state="State 0" output="["/>
+            <when state="State 6" output="⟨"/>
         </action>
         <action id=",">
             <when state="none" output=","/>
             <when state="Dead Key State 0" output="2"/>
+            <when state="State 6" output="≤"/>
         </action>
         <action id=".">
             <when state="none" output="."/>
             <when state="Dead Key State 0" output="3"/>
             <when state="State 0" output="…"/>
-            <when state="State 6" output="‥"/>
+            <when state="State 6" output="≥"/>
         </action>
         <action id="/">
             <when state="none" output="/"/>
@@ -1020,7 +1022,7 @@
             <when state="State 2" output="ï"/>
             <when state="State 3" output="î"/>
             <when state="State 5" output="ì"/>
-            <when state="State 6" output="∫"/>
+            <when state="State 6" output="⊥"/>
         </action>
         <action id="14">
             <when state="none" output="o"/>
@@ -1041,15 +1043,17 @@
             <when state="State 2" output="ü"/>
             <when state="State 3" output="û"/>
             <when state="State 5" output="ù"/>
-            <when state="State 6" output="∂"/>
+            <when state="State 6" output="⊤"/>
         </action>
         <action id="16">
             <when state="none" output="Y"/>
             <when state="State 2" output="Ÿ"/>
+            <when state="State 6" output="∩"/>
         </action>
         <action id="17">
             <when state="none" output="y"/>
             <when state="State 2" output="ÿ"/>
+            <when state="State 6" output="∪"/>
         </action>
         <action id="18">
             <when state="none" output="N"/>
@@ -1096,6 +1100,7 @@
             <when state="State 3" output="Â"/>
             <when state="State 4" output="Ã"/>
             <when state="State 5" output="À"/>
+            <when state="State 6" output="∧"/>
         </action>
         <action id="7">
             <when state="none" output="E"/>
@@ -1114,6 +1119,7 @@
             <when state="State 2" output="Ï"/>
             <when state="State 3" output="Î"/>
             <when state="State 5" output="Ì"/>
+            <when state="State 6" output="∅"/>
         </action>
         <action id="8 1">
             <when state="none" output="8"/>
@@ -1125,6 +1131,7 @@
             <when state="State 3" output="Ô"/>
             <when state="State 4" output="Õ"/>
             <when state="State 5" output="Ò"/>
+            <when state="State 6" output="∨"/>
         </action>
         <action id="9 1">
             <when state="none" output="9"/>
@@ -1146,9 +1153,14 @@
         <action id="@">
             <when state="none" next="State 1"/>
         </action>
+        <action id="B">
+            <when state="none" output="B"/>
+            <when state="State 6" output="θ"/>
+        </action>
         <action id="C">
             <when state="none" output="C"/>
             <when state="State 1" output="Ç"/>
+            <when state="State 6" output="Π"/>
         </action>
         <action id="Dead Key State 0">
             <when state="none" next="Dead Key State 0"/>
@@ -1156,9 +1168,25 @@
         <action id="Dead Key State 1">
             <when state="none" next="Dead Key State 0"/>
         </action>
+        <action id="F">
+            <when state="none" output="F"/>
+            <when state="State 6" output="→"/>
+        </action>
+        <action id="G">
+            <when state="none" output="G"/>
+            <when state="State 6" output="⇒"/>
+        </action>
         <action id="H">
             <when state="none" output="H"/>
             <when state="State 7" output="≑"/>
+        </action>
+        <action id="K">
+            <when state="none" output="K"/>
+            <when state="State 6" output="∉"/>
+        </action>
+        <action id="L">
+            <when state="none" output="L"/>
+            <when state="State 6" output="Λ"/>
         </action>
         <action id="State 0">
             <when state="none" next="State 0"/>
@@ -1166,6 +1194,7 @@
         <action id="State 0 1">
             <when state="none" output=")"/>
             <when state="State 0" output="]"/>
+            <when state="State 6" output="⟩"/>
         </action>
         <action id="State 1">
             <when state="none" next="State 4"/>
@@ -1188,6 +1217,18 @@
         <action id="State 7">
             <when state="none" next="State 7"/>
         </action>
+        <action id="T">
+            <when state="none" output="T"/>
+            <when state="State 6" output="≈"/>
+        </action>
+        <action id="V">
+            <when state="none" output="V"/>
+            <when state="State 6" output="Σ"/>
+        </action>
+        <action id="X">
+            <when state="none" output="X"/>
+            <when state="State 6" output="×"/>
+        </action>
         <action id="\">
             <when state="none" output="\"/>
             <when state="State 6" output="`"/>
@@ -1204,6 +1245,7 @@
         <action id="b">
             <when state="none" output="b"/>
             <when state="State 0" output="\"/>
+            <when state="State 6" output="μ"/>
         </action>
         <action id="c">
             <when state="none" output="c"/>
@@ -1222,7 +1264,7 @@
         </action>
         <action id="g">
             <when state="none" output="g"/>
-            <when state="State 6" output="←"/>
+            <when state="State 6" output="⊢"/>
         </action>
         <action id="h">
             <when state="none" output="h"/>
@@ -1237,6 +1279,7 @@
         <action id="k">
             <when state="none" output="k"/>
             <when state="Dead Key State 0" output="5"/>
+            <when state="State 6" output="∈"/>
         </action>
         <action id="l">
             <when state="none" output="l"/>
@@ -1276,7 +1319,7 @@
         </action>
         <action id="v">
             <when state="none" output="v"/>
-            <when state="State 6" output="→"/>
+            <when state="State 6" output="∃"/>
         </action>
         <action id="w">
             <when state="none" output="w"/>
