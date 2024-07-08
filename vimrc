@@ -111,7 +111,7 @@ let g:ctrlp_by_filename = 0
 :noremap k gk
 
 :nnoremap <expr> r ':<C-u>!clear<cr>:w!<cr>'.(
-    \ &ft=='agda'       ? ':!time agda -i src %<cr>' :
+    \ &ft=='agda'       ? ':call AgdaCheck()<cr>' :
     \ &ft=='bend'       ? ':!/usr/bin/time bend run-c % -s<cr>' :
     \ &ft=='c'          ? ':!clang % -o %:r -lSDL2<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -std=c++11 -O3 % -o %:r<cr>:!time ./%:r<cr>' :
@@ -171,6 +171,7 @@ let g:ctrlp_by_filename = 0
 :nnoremap <expr> <leader>q ':q!<cr>'
 :nnoremap <leader>b :put!='----------'<cr>:put!=strftime('%Y-%m-%d')<cr>
 
+
 " --------------------------------------------------------------------------
 
 "" Calls GPT-4 to fill holes in the current file,
@@ -221,8 +222,27 @@ nnoremap <leader>L :!clear<CR>:call FillHoles('L')<CR>
 nnoremap <leader>i :!clear<CR>:call FillHoles('i')<CR>
 nnoremap <leader>I :!clear<CR>:call FillHoles('I')<CR>
 ":nmap z :!clear<CR>:call FillHoles('h')<CR>
-nnoremap <space> :!clear<CR>:call FillHoles('h')<CR>
+"nnoremap <space> :!clear<CR>:call FillHoles('h')<CR>
 
+" Checks an Agda file
+" It replaces all question marks ('?') in the current file by ('{!!}'). Then, it
+" calls the 'agda-check <file>' system command.
+function! AgdaCheck()
+  " Save the current file
+  exec 'w'
+
+  " Replace all '?' with '{!!}'
+  exec '%s/?/{!!}/g'
+
+  " Save the file again
+  exec 'w'
+
+  " Run the agda-check command
+  exec '!agda-check ' . expand('%:p')
+
+  " Reload the file to show the changes
+  exec 'e!'
+endfunction
 
 " --------------------------------------------------------------------------
 
@@ -608,13 +628,36 @@ autocmd FileType markdown setlocal shiftwidth=2 tabstop=2
 " :nnoremap ! :!clear && 
 
 " Map space to open a terminal
-:nnoremap <space> :term<CR>
+:nnoremap <enter> :term<CR>
 
 " Map <leader><space> to open a terminal and enter the 'csh' command
-:nnoremap <leader><space> :term<CR>csh<CR>
+:nnoremap <leader><enter> :term<CR>csh<CR>
 
 " Map <C-z> on the terminal window to quit it
 :tnoremap <C-z> <C-\><C-n>:q!<CR>
 
 " Map <leader>F to open a terminal and enter the 'csh s <file_name>' command
 :nnoremap <leader>F :execute 'term csh s ' . expand('%:t')<CR>
+
+" Refactors the file using AI
+function! RefactorFile()
+  let l:current_file = expand('%:p')
+  call inputsave()
+  let l:user_text = input('Enter refactor request: ')
+  call inputrestore()
+  
+  " Save the file before refactoring
+  write
+
+  let l:cmd = 'refactor "' . l:current_file . '" "' . l:user_text . '" s'
+  
+  " Add --check flag if user_text starts with '-' or is empty
+  if l:user_text =~ '^-' || empty(l:user_text)
+    let l:cmd .= ' --check'
+  endif
+  
+  execute '!clear && ' . l:cmd
+  edit!
+endfunction
+
+nnoremap <space> :call RefactorFile()<CR>
