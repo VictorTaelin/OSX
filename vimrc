@@ -259,7 +259,7 @@ let g:vim_ai_chat = {
 " NERDTree stuff
 :let NERDTreeIgnore = ['\.idr\~$','\.ibc$','\.min.js$','\.agdai','\.pyc$','\.hi$','\.o$','\.js_o$','\.js_hi$','\.dyn_o$','\.dyn_hi$','\.jsexe','.*dist\/.*','.*bin\/.*']
 :let NERDTreeChDirMode = 2
-:let NERDTreeWinSize = 24
+:let NERDTreeWinSize = 16
 :let NERDTreeShowHidden=1
 :nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
 
@@ -649,7 +649,11 @@ function! RefactorFile()
   " Save the file before refactoring
   write
 
-  let l:cmd = 'refactor "' . l:current_file . '" "' . l:user_text . '" s'
+  if expand('%:e') == 'kind2'
+    let l:cmd = 'kindcoder "' . l:current_file . '" "' . l:user_text . '" s'
+  else
+    let l:cmd = 'refactor "' . l:current_file . '" "' . l:user_text . '" s'
+  endif
   
   " Add --check flag if user_text starts with '-' or is empty
   if l:user_text =~ '^-' || empty(l:user_text)
