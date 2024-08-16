@@ -116,7 +116,8 @@ let g:ctrlp_by_filename = 0
     \ &ft=='c'          ? ':!clang % -o %:r -lSDL2<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -std=c++11 -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/hvm.cu<CR>:!echo "Compiling..."; ssh taelin@HOC /usr/local/cuda-12.4/bin/nvcc -w -O3 /home/taelin/cuda/hvm.cu -o /home/taelin/cuda/hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/cuda/hvm<cr>' :
-    \ &ft=='haskell'    ? ':!time runghc --ghc-arg=-freverse-errors %<cr>' :
+    "\ &ft=='haskell'    ? ':!time runghc --ghc-arg=-freverse-errors %<cr>' :
+    \ &ft=='haskell'    ? ':call RunHaskellFile()<cr>' :
     \ &ft=='hvm'        ? ':!/usr/bin/time hvm run-c %<cr>' :
     \ &ft=='hvm1'       ? ':!/usr/bin/time -l -h hvm1 run -t 1 -c -f % "(Main)"<cr>' :
     \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc run % -s -m 32G<cr>' :
@@ -126,12 +127,14 @@ let g:ctrlp_by_filename = 0
     \ &ft=='kind'       ? ':!time kind %<cr>' :
     \ &ft=='kindc'      ? ':!time kindc check %<cr>' :
     \ &ft=='kind2'      ? ':!/usr/bin/time kind2 check ' . substitute(substitute(expand("%"), ".kind2", "", "g"), "/_", "", "g") . '<cr>' :
+    \ &ft=='kind2hs'    ? ':!time kind2hs check %<cr>' :
+    \ &ft=='tt'         ? ':!time /Users/v/vic/dev/program_search/tt check %<cr>' :
     \ &ft=='lean'       ? ':!time lean --run %<cr>' :
     \ &ft=='markdown'   ? ':StartPresenting<cr>' :
     \ &ft=='python'     ? ':!time python3 %<cr>' :
     \ &ft=='rust'       ? ':!time RUST_BACKTRACE=1 cargo run<cr>' :
     \ &ft=='sh'         ? ':!time ./%<cr>' :
-    \ &ft=='typescript' ? ':!time tsc --noEmit %; tsx %<cr>' :
+    \ &ft=='typescript' ? ':call RunTypeScriptFile()<cr>' :
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> R ':<C-u>!clear<cr>:w!<cr>'.(
@@ -149,16 +152,45 @@ let g:ctrlp_by_filename = 0
     \ &ft=='javascript' ? ':!npm run build<cr>' :
     \ &ft=='kind2'      ? ':!/usr/bin/time kind2 normal ' . substitute(substitute(expand("%"), ".kind2", "", "g"), "/_", "", "g") . '<cr>' :
     \ &ft=='kindc'      ? ':!time kindc run %<cr>' :
+    \ &ft=='kind2hs'    ? ':!time kind2hs run %<cr>' :
+    \ &ft=='tt'         ? ':!time /Users/v/vic/dev/program_search/tt run %<cr>' :
     "\ &ft=='kind2'      ? ':!/usr/bin/time kind2 normal %:r<cr>' :
     \ &ft=='rust'       ? ':!time cargo run --release<cr>' :
     \ &ft=='typescript' ? ':!time tsx %<cr>' :
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> <leader>r ':<C-u>!clear<cr>:w!<cr>'.(
-    \ &ft=='hvm' ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/cuda/main.hvm<cr>' :
+    \ &ft=='hvm' ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/cuda/main.hvm -s<cr>' :
+    \ &ft=='bend' ? ':!echo "Sending to Higher Order Computer."; bend gen-hvm % > %:r.hvm  2>/dev/null; rsync %:r.hvm taelin@HOC:/home/taelin/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/main.hvm<cr>' :
     \ ':!time cc %<cr>')
 
-:nnoremap <expr> <leader>m ':w!<cr>:!clear; cargo install --path .<cr>'
+:nnoremap <expr> <leader>m ':w!<cr>:!clear; ' . (
+    \ &ft=='rust'       ? 'cargo install --path .' :
+    \ &ft=='haskell'    ? 'cabal install --overwrite-policy=always' :
+    \ &ft=='typescript' ? 'npm run build' :
+    \ &ft=='javascript' ? 'npm run build' :
+    \ 'echo "No build command defined for this filetype"'
+    \ ) . '<cr>'
+
+function! RunTypeScriptFile()
+  let l:tsconfig_exists = filereadable('tsconfig.json')
+  if l:tsconfig_exists
+    execute '!clear && tsc --target esnext --noEmit && time tsx %'
+  else
+    execute '!clear && tsc --target esnext --noEmit % && time tsx %'
+  endif
+endfunction
+
+function! RunHaskellFile()
+  "let l:cabal_exists = filereadable('cabal.project')
+  "this is wrong. it should check if there is any .cabal file locally.
+  let l:cabal_exists = !empty(glob('*.cabal'))
+  if l:cabal_exists
+    execute '!clear && cabal run'
+  else
+    execute '!clear && ghc -O2 % -o .tmp && time ./.tmp && rm .tmp'
+  endif
+endfunction
 
 ":nnoremap <expr> <leader>m ':!clear<cr>:w!<cr>'.(
     "\ &ft=='rust'       ? ':!cargo install --path .<cr>' :
@@ -421,6 +453,10 @@ au BufNewFile,BufRead *.kind2 set filetype=kind2
 au BufNewFile,BufRead *.kind2 set syntax=javascript
 au BufNewFile,BufRead *.kindc set filetype=kindc
 au BufNewFile,BufRead *.kindc set syntax=javascript
+au BufNewFile,BufRead *.kind2hs set filetype=kind2hs
+au BufNewFile,BufRead *.kind2hs set syntax=javascript
+au BufNewFile,BufRead *.tt set filetype=tt
+au BufNewFile,BufRead *.tt set syntax=javascript
 au BufNewFile,BufRead *.type set filetype=type
 au BufNewFile,BufRead *.type set syntax=javascript
 au BufNewFile,BufRead *.bend set filetype=bend
@@ -524,7 +560,7 @@ set undodir=~/.vim/undo
 set foldlevel=12
 au Syntax * normal zR
 
-set formatoptions=cql
+"set formatoptions=ql
 autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
 
 " Close all open buffers on entering a window if the only
@@ -628,10 +664,10 @@ autocmd FileType markdown setlocal shiftwidth=2 tabstop=2
 " :nnoremap ! :!clear && 
 
 " Map space to open a terminal
-:nnoremap <enter> :term<CR>
+":nnoremap <enter> :term<CR>
 
-" Map <leader><space> to open a terminal and enter the 'csh' command
-:nnoremap <leader><enter> :term<CR>csh<CR>
+" Map <leader><space> to open a terminal
+:nnoremap <leader><enter> :term<CR>
 
 " Map <C-z> on the terminal window to quit it
 :tnoremap <C-z> <C-\><C-n>:q!<CR>
@@ -649,11 +685,16 @@ function! RefactorFile()
   " Save the file before refactoring
   write
 
-  let l:cmd = 'refactor "' . l:current_file . '" "' . l:user_text . '" s'
+  let l:cmd = 'refactor "' . l:current_file . '" "' . l:user_text . '"'
+  if expand('%:e') == 'kind2'
+    let l:cmd = 'kindcoder "' . l:current_file . '" "' . l:user_text . '"'
+  elseif expand('%:e') == 'ts' || expand('%:e') == 'tsx'
+    let l:cmd = 'tscoder "' . l:current_file . '" "' . l:user_text . '"'
+  endif
   
   " Add --check flag if user_text starts with '-' or is empty
   if l:user_text =~ '^-' || empty(l:user_text)
-    let l:cmd .= ' --check'
+    let l:cmd .= ' s --check'
   endif
   
   execute '!clear && ' . l:cmd
@@ -661,3 +702,30 @@ function! RefactorFile()
 endfunction
 
 nnoremap <space> :call RefactorFile()<CR>
+
+" FormatOptions:
+" 1. t: Auto-wrap text using textwidth
+" 2. c: Auto-wrap comments using textwidth
+" 3. r: Automatically insert comment leader after <Enter> in Insert mode
+" 4. o: Automatically insert comment leader after 'o' or 'O' in Normal mode
+" 5. q: Allow formatting of comments with "gq"
+" 6. w: Trailing white space indicates a paragraph continues in the next line
+" 7. a: Automatic formatting of paragraphs
+" 8. n: Recognize numbered lists
+" 9. 2: Use the indent of the second line of a paragraph for the rest of the paragraph
+" 10. v: Only break a line at a blank that you have entered during the current insert command
+" 11. b: Like 'v', but only auto-wrap if you enter a blank at or before the wrap margin
+" 12. l: Long lines are not broken in insert mode
+" 13. m: Also break at a multi-byte character above 255
+" 14. M: When joining lines, don't insert a space before or after a multi-byte character
+" 15. B: When joining lines, don't insert a space between two multi-byte characters
+" 16. j: Where it makes sense, remove a comment leader when joining lines
+
+" Set formatoptions globally to only 'cl'
+set formatoptions=ql
+
+" Ensure these settings apply to all filetypes
+augroup FormatOptions
+    autocmd!
+    autocmd FileType * setlocal formatoptions=ql
+augroup END
