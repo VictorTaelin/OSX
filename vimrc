@@ -124,7 +124,7 @@ let g:ctrlp_by_filename = 0
     \ &ft=='icc'        ? ':!/usr/bin/time icc check %:r<cr>' :
     \ &ft=='idris2'     ? ':!time idris2 % -o %:r<cr>:!time ./build/exec/%:r<cr>' :
     \ &ft=='javascript' ? ':!time node %<cr>' :
-    \ &ft=='kind'       ? ':!time kind %<cr>' :
+    \ &ft=='kind'       ? ':!time kind check %<cr>' :
     \ &ft=='kindc'      ? ':!time kindc check %<cr>' :
     \ &ft=='kind2'      ? ':!/usr/bin/time kind2 check ' . substitute(substitute(expand("%"), ".kind2", "", "g"), "/_", "", "g") . '<cr>' :
     \ &ft=='kind2hs'    ? ':!time kind2hs check %<cr>' :
@@ -135,10 +135,11 @@ let g:ctrlp_by_filename = 0
     \ &ft=='rust'       ? ':!time RUST_BACKTRACE=1 cargo run<cr>' :
     \ &ft=='sh'         ? ':!time ./%<cr>' :
     \ &ft=='typescript' ? ':call RunTypeScriptFile()<cr>' :
+    "\ &ft=='typescript' ? ':!time bun run %<cr>' :
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> R ':<C-u>!clear<cr>:w!<cr>'.(
-    \ &ft=='agda'       ? ':!agda -i src %<cr>' :
+    \ &ft=='agda'       ? ':!agda-compile %<cr>:!time ./%:r<cr>' :
     \ &ft=='bend'       ? ':!bend gen-hvm % > %:r.hvm<cr>' :
     \ &ft=='c'          ? ':!clang -O2 % -o %:r -lSDL2<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
@@ -150,13 +151,15 @@ let g:ctrlp_by_filename = 0
     \ &ft=='icc'        ? ':!/usr/bin/time icc run %:r<cr>' :
     \ &ft=='idris2'     ? ':!idris2 % -o %:r<cr>:!time ./build/exec/%:r<cr>' :
     \ &ft=='javascript' ? ':!npm run build<cr>' :
+    \ &ft=='kind'       ? ':!time kind run %<cr>' :
     \ &ft=='kind2'      ? ':!/usr/bin/time kind2 normal ' . substitute(substitute(expand("%"), ".kind2", "", "g"), "/_", "", "g") . '<cr>' :
     \ &ft=='kindc'      ? ':!time kindc run %<cr>' :
     \ &ft=='kind2hs'    ? ':!time kind2hs run %<cr>' :
     \ &ft=='tt'         ? ':!time /Users/v/vic/dev/program_search/tt run %<cr>' :
     "\ &ft=='kind2'      ? ':!/usr/bin/time kind2 normal %:r<cr>' :
     \ &ft=='rust'       ? ':!time cargo run --release<cr>' :
-    \ &ft=='typescript' ? ':!time tsx %<cr>' :
+    "\ &ft=='typescript' ? ':!time tsx %<cr>' :
+    \ &ft=='typescript' ? ':!time bun run %<cr>' :
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> <leader>r ':<C-u>!clear<cr>:w!<cr>'.(
@@ -166,7 +169,7 @@ let g:ctrlp_by_filename = 0
 
 :nnoremap <expr> <leader>m ':w!<cr>:!clear; ' . (
     \ &ft=='rust'       ? 'cargo install --path .' :
-    \ &ft=='haskell'    ? 'cabal install --overwrite-policy=always' :
+    \ &ft=='haskell'    ? 'cabal install --global --overwrite-policy=always' :
     \ &ft=='typescript' ? 'npm run build' :
     \ &ft=='javascript' ? 'npm run build' :
     \ 'echo "No build command defined for this filetype"'
@@ -175,9 +178,9 @@ let g:ctrlp_by_filename = 0
 function! RunTypeScriptFile()
   let l:tsconfig_exists = filereadable('tsconfig.json')
   if l:tsconfig_exists
-    execute '!clear && tsc --target esnext --noEmit && time tsx %'
+    execute '!clear && tsc --target esnext --noEmit && time bun run %'
   else
-    execute '!clear && tsc --target esnext --noEmit % && time tsx %'
+    execute '!clear && tsc --target esnext --noEmit % && time bun run %'
   endif
 endfunction
 
@@ -188,7 +191,7 @@ function! RunHaskellFile()
   if l:cabal_exists
     execute '!clear && cabal run'
   else
-    execute '!clear && ghc -O2 % -o .tmp && time ./.tmp && rm .tmp'
+    execute '!clear && ghc -O2 % -o .tmp_hs && time ./.tmp_hs && rm .tmp_hs'
   endif
 endfunction
 
@@ -245,10 +248,11 @@ function! FillHoles(model)
   exec 'edit!'
 endfunction
 
+nnoremap <leader>o :!clear<CR>:call FillHoles('o')<CR>
 nnoremap <leader>g :!clear<CR>:call FillHoles('g')<CR>
 nnoremap <leader>G :!clear<CR>:call FillHoles('G')<CR>
-nnoremap <leader>h :!clear<CR>:call FillHoles('s')<CR>
-nnoremap <leader>H :!clear<CR>:call FillHoles('o')<CR>
+nnoremap <leader>h :!clear<CR>:call FillHoles('c')<CR>
+nnoremap <leader>H :!clear<CR>:call FillHoles('C')<CR>
 nnoremap <leader>l :!clear<CR>:call FillHoles('l')<CR>
 nnoremap <leader>L :!clear<CR>:call FillHoles('L')<CR>
 nnoremap <leader>i :!clear<CR>:call FillHoles('i')<CR>
@@ -258,7 +262,7 @@ nnoremap <leader>I :!clear<CR>:call FillHoles('I')<CR>
 
 " Checks an Agda file
 " It replaces all question marks ('?') in the current file by ('{!!}'). Then, it
-" calls the 'agda-check <file>' system command.
+" calls the 'agda-cli check <file>' system command.
 function! AgdaCheck()
   " Save the current file
   exec 'w'
@@ -269,8 +273,8 @@ function! AgdaCheck()
   " Save the file again
   exec 'w'
 
-  " Run the agda-check command
-  exec '!agda-check ' . expand('%:p')
+  " Run the agda-cli command
+  exec '!agda-cli check ' . expand('%:p')
 
   " Reload the file to show the changes
   exec 'e!'
@@ -449,22 +453,22 @@ au BufNewFile,BufRead *.eac set filetype=eac
 au BufNewFile,BufRead *.eac set syntax=javascript
 au BufNewFile,BufRead *.fmc set filetype=formcore
 au BufNewFile,BufRead *.fmc set syntax=javascript
+au BufNewFile,BufRead *.kind set filetype=kind
+au BufNewFile,BufRead *.kind set syntax=javascript
 au BufNewFile,BufRead *.kind2 set filetype=kind2
 au BufNewFile,BufRead *.kind2 set syntax=javascript
 au BufNewFile,BufRead *.kindc set filetype=kindc
 au BufNewFile,BufRead *.kindc set syntax=javascript
 au BufNewFile,BufRead *.kind2hs set filetype=kind2hs
 au BufNewFile,BufRead *.kind2hs set syntax=javascript
+au BufNewFile,BufRead *.kindelia set filetype=kindelia
+au BufNewFile,BufRead *.kindelia set syntax=javascript
 au BufNewFile,BufRead *.tt set filetype=tt
 au BufNewFile,BufRead *.tt set syntax=javascript
 au BufNewFile,BufRead *.type set filetype=type
 au BufNewFile,BufRead *.type set syntax=javascript
 au BufNewFile,BufRead *.bend set filetype=bend
 au BufNewFile,BufRead *.bend set syntax=python
-au BufNewFile,BufRead *.kind set filetype=kind
-au BufNewFile,BufRead *.kind set syntax=javascript
-au BufNewFile,BufRead *.kindelia set filetype=kindelia
-au BufNewFile,BufRead *.kindelia set syntax=javascript
 au BufNewFile,BufRead *.kdl set filetype=kindelia
 au BufNewFile,BufRead *.kdl set syntax=javascript
 au BufNewFile,BufRead *.bolt set filetype=lambolt
@@ -679,18 +683,14 @@ autocmd FileType markdown setlocal shiftwidth=2 tabstop=2
 function! RefactorFile()
   let l:current_file = expand('%:p')
   call inputsave()
-  let l:user_text = input('Enter refactor request: ')
+  let l:user_text = input('λ: ')
   call inputrestore()
   
   " Save the file before refactoring
   write
 
-  let l:cmd = 'refactor "' . l:current_file . '" "' . l:user_text . '"'
-  if expand('%:e') == 'kind2'
-    let l:cmd = 'kindcoder "' . l:current_file . '" "' . l:user_text . '"'
-  elseif expand('%:e') == 'ts' || expand('%:e') == 'tsx'
-    let l:cmd = 'tscoder "' . l:current_file . '" "' . l:user_text . '"'
-  endif
+  " Command to call the Koder refactorer
+  let l:cmd = 'koder "' . l:current_file . '" "' . l:user_text . '"'
   
   " Add --check flag if user_text starts with '-' or is empty
   if l:user_text =~ '^-' || empty(l:user_text)
@@ -729,3 +729,5 @@ augroup FormatOptions
     autocmd!
     autocmd FileType * setlocal formatoptions=ql
 augroup END
+
+autocmd BufRead,BufNewFile *.agda setfiletype agda
