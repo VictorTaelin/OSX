@@ -295,7 +295,7 @@ let g:vim_ai_chat = {
 " NERDTree stuff
 :let NERDTreeIgnore = ['\.idr\~$','\.ibc$','\.min.js$','\.agdai','\.pyc$','\.hi$','\.o$','\.js_o$','\.js_hi$','\.dyn_o$','\.dyn_hi$','\.jsexe','.*dist\/.*','.*bin\/.*']
 :let NERDTreeChDirMode = 2
-:let NERDTreeWinSize = 24
+:let NERDTreeWinSize = 16
 :let NERDTreeShowHidden=1
 :nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
 
