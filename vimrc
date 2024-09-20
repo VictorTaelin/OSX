@@ -165,6 +165,8 @@ let g:ctrlp_by_filename = 0
 :nnoremap <expr> <leader>r ':<C-u>!clear<cr>:w!<cr>'.(
     \ &ft=='hvm' ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/cuda/main.hvm -s<cr>' :
     \ &ft=='bend' ? ':!echo "Sending to Higher Order Computer."; bend gen-hvm % > %:r.hvm  2>/dev/null; rsync %:r.hvm taelin@HOC:/home/taelin/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/main.hvm<cr>' :
+    \ &ft=='agda' ? ':!agda2ts %<cr>' :
+    \ &ft=='typescript' ? ':!agda2ts %<cr>' :
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> <leader>m ':w!<cr>:!clear; ' . (
@@ -248,7 +250,8 @@ function! FillHoles(model)
   exec 'edit!'
 endfunction
 
-nnoremap <leader>o :!clear<CR>:call FillHoles('o')<CR>
+nnoremap <leader>o :!clear<CR>:call FillHoles('om')<CR>
+nnoremap <leader>O :!clear<CR>:call FillHoles('o')<CR>
 nnoremap <leader>g :!clear<CR>:call FillHoles('g')<CR>
 nnoremap <leader>G :!clear<CR>:call FillHoles('G')<CR>
 nnoremap <leader>h :!clear<CR>:call FillHoles('c')<CR>
@@ -295,7 +298,7 @@ let g:vim_ai_chat = {
 " NERDTree stuff
 :let NERDTreeIgnore = ['\.idr\~$','\.ibc$','\.min.js$','\.agdai','\.pyc$','\.hi$','\.o$','\.js_o$','\.js_hi$','\.dyn_o$','\.dyn_hi$','\.jsexe','.*dist\/.*','.*bin\/.*']
 :let NERDTreeChDirMode = 2
-:let NERDTreeWinSize = 16
+:let NERDTreeWinSize = 24
 :let NERDTreeShowHidden=1
 :nmap <expr> <enter> v:count1 <= 1 ? "<C-h>C<C-w>p" : "@_<C-W>99h". v:count1 ."Go<C-w>l"
 
@@ -304,7 +307,12 @@ au VimEnter * NERDTree
 " au VimEnter * set nu "enable to always set nu
 au VimEnter * wincmd l
 
-:nmap <expr> <leader>t ":ClearCtrlPCache<cr>:NERDTree<cr>:set nu<cr><C-w>l"
+" NERDTREE
+" --------
+
+:nmap <expr> <leader>t ":NERDTreeRefreshRoot<cr>"
+
+" --------
 
 " Can I solve the ESC out of home problem?
 :inoremap ☮ <esc>
@@ -694,7 +702,7 @@ function! RefactorFile()
   
   " Add --check flag if user_text starts with '-' or is empty
   if l:user_text =~ '^-' || empty(l:user_text)
-    let l:cmd .= ' s --check'
+    let l:cmd .= ' c --check'
   endif
   
   execute '!clear && ' . l:cmd
@@ -702,6 +710,8 @@ function! RefactorFile()
 endfunction
 
 nnoremap <space> :call RefactorFile()<CR>
+nnoremap <leader><space> :!clear<CR>:w!<cr>:!agda2ts %<CR>
+
 
 " FormatOptions:
 " 1. t: Auto-wrap text using textwidth
