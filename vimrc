@@ -118,7 +118,11 @@ let g:ctrlp_by_filename = 0
     \ &ft=='cuda'       ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/hvm.cu<CR>:!echo "Compiling..."; ssh taelin@HOC /usr/local/cuda-12.4/bin/nvcc -w -O3 /home/taelin/cuda/hvm.cu -o /home/taelin/cuda/hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/cuda/hvm<cr>' :
     "\ &ft=='haskell'    ? ':!time runghc --ghc-arg=-freverse-errors %<cr>' :
     \ &ft=='haskell'    ? ':call RunHaskellFile()<cr>' :
+    \ &ft=='absal'      ? ':!/usr/bin/time absal %<cr>' :
     \ &ft=='hvm'        ? ':!/usr/bin/time hvm run-c %<cr>' :
+    "\ &ft=='hvml'       ? ':!/usr/bin/time hvml run % -C -s<cr>' :
+    \ &ft=='hvml'       ? ':!/usr/bin/time cabal run hvml --project-dir=/Users/v/vic/dev/HVM3 -- run % -C -s<cr>' :
+    \ &ft=='hvms'       ? ':!/usr/bin/time hvms run % -s<cr>' :
     \ &ft=='hvm1'       ? ':!/usr/bin/time -l -h hvm1 run -t 1 -c -f % "(Main)"<cr>' :
     \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc run % -s -m 32G<cr>' :
     \ &ft=='icc'        ? ':!/usr/bin/time icc check %:r<cr>' :
@@ -141,16 +145,18 @@ let g:ctrlp_by_filename = 0
 :nnoremap <expr> R ':<C-u>!clear<cr>:w!<cr>'.(
     \ &ft=='agda'       ? ':!agda-compile %<cr>:!time ./%:r<cr>' :
     \ &ft=='bend'       ? ':!bend gen-hvm % > %:r.hvm<cr>' :
-    \ &ft=='c'          ? ':!clang -O2 % -o %:r -lSDL2<cr>:!time ./%:r<cr>' :
+    \ &ft=='c'          ? ':!clang -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='haskell'    ? ':!time ghc -O2 % -o .tmp; time ./.tmp 0; rm %:r.hi %:r.o .tmp<cr>' :
     \ &ft=='hvm'        ? ':!hvm gen-c % > %:r.c; hvm gen-cu % > %:r.cu<cr>' :
+    \ &ft=='hvml'       ? ':!/usr/bin/time hvml run % -c -S -s<cr>' :
+    \ &ft=='hvms'       ? ':!/usr/bin/time hvms run % -c -s<cr>' :
     \ &ft=='hvm1'       ? ':!hvm1 compile %; cd %:r1; cargo build --release; /usr/bin/time -l -h ./target/release/%:r run -c true "(Main)"<cr>' :
     \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc compile %; time ./%:r -s<cr>' :
     \ &ft=='icc'        ? ':!/usr/bin/time icc run %:r<cr>' :
     \ &ft=='idris2'     ? ':!idris2 % -o %:r<cr>:!time ./build/exec/%:r<cr>' :
-    \ &ft=='javascript' ? ':!npm run build<cr>' :
+    \ &ft=='javascript' ? ':!time bun %<cr>' :
     \ &ft=='kind'       ? ':!time kind run %<cr>' :
     \ &ft=='kind2'      ? ':!/usr/bin/time kind2 normal ' . substitute(substitute(expand("%"), ".kind2", "", "g"), "/_", "", "g") . '<cr>' :
     \ &ft=='kindc'      ? ':!time kindc run %<cr>' :
@@ -163,26 +169,26 @@ let g:ctrlp_by_filename = 0
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> <leader>r ':<C-u>!clear<cr>:w!<cr>'.(
-    \ &ft=='hvm' ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/cuda/main.hvm -s<cr>' :
+    \ &ft=='hvml' ? ':!/usr/bin/time hvml run % -s<cr>' :
+    \ &ft=='hvm'  ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/cuda/main.hvm -s<cr>' :
     \ &ft=='bend' ? ':!echo "Sending to Higher Order Computer."; bend gen-hvm % > %:r.hvm  2>/dev/null; rsync %:r.hvm taelin@HOC:/home/taelin/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/main.hvm<cr>' :
-    \ &ft=='agda' ? ':!agda2ts %<cr>' :
-    \ &ft=='typescript' ? ':!agda2ts %<cr>' :
+    \ &ft=='kind' ? ':!kind to-js %:r \| prettier --parser babel > %:r.js<cr>' :
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> <leader>m ':w!<cr>:!clear; ' . (
-    \ &ft=='rust'       ? 'cargo install --path .' :
-    \ &ft=='haskell'    ? 'cabal install --global --overwrite-policy=always' :
-    \ &ft=='typescript' ? 'npm run build' :
-    \ &ft=='javascript' ? 'npm run build' :
+    \ &ft=='rust'       ? 'time cargo install --path .' :
+    \ &ft=='haskell'    ? 'time cabal install --global --overwrite-policy=always' :
+    \ &ft=='typescript' ? 'time npm run build' :
+    \ &ft=='javascript' ? 'time npm run build' :
     \ 'echo "No build command defined for this filetype"'
     \ ) . '<cr>'
 
 function! RunTypeScriptFile()
   let l:tsconfig_exists = filereadable('tsconfig.json')
   if l:tsconfig_exists
-    execute '!clear && tsc --target esnext --noEmit && time bun run %'
+    execute '!clear && tsc --target esnext --noEmit --skipLibCheck % && time bun run %'
   else
-    execute '!clear && tsc --target esnext --noEmit % && time bun run %'
+    execute '!clear && tsc --target esnext --noEmit --skipLibCheck % && time bun run %'
   endif
 endfunction
 
@@ -191,7 +197,18 @@ function! RunHaskellFile()
   "this is wrong. it should check if there is any .cabal file locally.
   let l:cabal_exists = !empty(glob('*.cabal'))
   if l:cabal_exists
-    execute '!clear && cabal run'
+    "execute '!clear && cabal run'
+    "-- TODO: if HVML is in this dir's name, run 'cabal run hvml'
+    "-- TODO: if HVMS is in this dir's name, run 'cabal run hvms'
+    "-- otherwise, run just 'cabal run'
+    let l:dir_name = expand('%:p:h')
+    if l:dir_name =~ 'HVML'
+      execute '!clear && time cabal run hvml -- +RTS -N -RTS'
+    elseif l:dir_name =~ 'HVMS'
+      execute '!clear && time cabal run hvms -- +RTS -N -RTS'
+    else
+      execute '!clear && time cabal run'
+    endif
   else
     execute '!clear && ghc -O2 % -o .tmp_hs && time ./.tmp_hs && rm .tmp_hs'
   endif
@@ -245,7 +262,7 @@ function! FillHoles(model)
       let l:tmpFile = expand('%:p') 
   endif
   call SaveVisibleLines('.fill.tmp')
-  exec '!NODE_NO_WARNINGS=1 holefill ' . l:tmpFile . ' .fill.tmp ' . a:model
+  exec '!time NODE_NO_WARNINGS=1 holefill ' . l:tmpFile . ' .fill.tmp ' . a:model
   exec '!rm .fill.tmp'
   exec 'edit!'
 endfunction
@@ -253,7 +270,8 @@ endfunction
 nnoremap <leader>o :!clear<CR>:call FillHoles('om')<CR>
 nnoremap <leader>O :!clear<CR>:call FillHoles('o')<CR>
 nnoremap <leader>g :!clear<CR>:call FillHoles('g')<CR>
-nnoremap <leader>G :!clear<CR>:call FillHoles('G')<CR>
+nnoremap <leader>G :!clear<CR>:call FillHoles('gm')<CR>
+nnoremap <leader>k :!clear<CR>:call FillHoles('d')<CR>
 nnoremap <leader>h :!clear<CR>:call FillHoles('c')<CR>
 nnoremap <leader>H :!clear<CR>:call FillHoles('C')<CR>
 nnoremap <leader>l :!clear<CR>:call FillHoles('l')<CR>
@@ -277,7 +295,7 @@ function! AgdaCheck()
   exec 'w'
 
   " Run the agda-cli command
-  exec '!agda-cli check ' . expand('%:p')
+  exec '!agda-cli check ' . expand('%:p') . '; echo ""; time agda-cli run ' . expand('%:p')
 
   " Reload the file to show the changes
   exec 'e!'
@@ -495,10 +513,18 @@ au BufNewFile,BufRead *.hvml set filetype=hvml
 au BufNewFile,BufRead *.hvml set syntax=javascript
 au BufNewFile,BufRead *.hvml syntax region Password start=/^\/\/\~/ end=/$/ " hvml hidden comments
 au BufNewFile,BufRead *.hvml highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.hvms set filetype=hvms
+au BufNewFile,BufRead *.hvms set syntax=javascript
+au BufNewFile,BufRead *.hvms syntax region Password start=/^\/\/\~/ end=/$/ " hvms hidden comments
+au BufNewFile,BufRead *.hvms highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.hvm2 set filetype=hvm2
 au BufNewFile,BufRead *.hvm2 set syntax=javascript
 au BufNewFile,BufRead *.hvm2 syntax region Password start=/^\/\/\~/ end=/$/ " hvm2 hidden comments
 au BufNewFile,BufRead *.hvm2 highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.absal set filetype=absal
+au BufNewFile,BufRead *.absal set syntax=javascript
+au BufNewFile,BufRead *.absal syntax region Password start=/^\/\/\~/ end=/$/ " absal hidden comments
+au BufNewFile,BufRead *.absal highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.tl set filetype=taelang
 au BufNewFile,BufRead *.tl set syntax=javascript
 au BufNewFile,BufRead *.icc set filetype=icc
@@ -687,7 +713,56 @@ autocmd FileType markdown setlocal shiftwidth=2 tabstop=2
 " Map <leader>F to open a terminal and enter the 'csh s <file_name>' command
 :nnoremap <leader>F :execute 'term csh s ' . expand('%:t')<CR>
 
-" Refactors the file using AI
+"" Refactors the file using AI
+
+"function! RefactorFile()
+  "let l:current_file = expand('%:p')
+  "call inputsave()
+  "let l:user_text = input('λ: ')
+  "call inputrestore()
+  
+  "" Save the file before refactoring
+  "write
+
+  "" Command to call the Koder refactorer
+  "let l:cmd = 'koder "' . l:current_file . '" "' . l:user_text . '"'
+  
+  "" Add --check flag if user_text starts with '-' or is empty
+  "if l:user_text =~ '^-' || empty(l:user_text)
+    "let l:cmd .= ' c --check'
+  "endif
+  
+  "execute '!clear && ' . l:cmd
+  "edit!
+"endfunction
+
+""nnoremap <space> :call RefactorFile()<CR>
+
+" TODO: let's refactor teh functionality above to use the new refactoring tool, called 'aoe'
+" when the user types space, it must call 'aoe <user_message_here>'
+" no need to check if the text starts with - or is empty
+" all else the same
+
+"function! RefactorFile()
+  "let l:current_file = expand('%:p')
+  "call inputsave()
+  "let l:user_text = input('λ: ')
+  "call inputrestore()
+  
+  "" Save the file before refactoring
+  "write
+
+  "" Command to call the aoe refactorer
+  "let l:cmd = 'aoe "' . l:user_text . '"'
+  
+  "execute '!clear && ' . l:cmd
+  "edit!
+"endfunction
+
+"nnoremap <space> :call RefactorFile()<CR>
+
+" TODO: edit the code above so that, if the user text ends in '?', we will call 'ask' instead of 'aoe'
+
 function! RefactorFile()
   let l:current_file = expand('%:p')
   call inputsave()
@@ -697,20 +772,20 @@ function! RefactorFile()
   " Save the file before refactoring
   write
 
-  " Command to call the Koder refactorer
-  let l:cmd = 'koder "' . l:current_file . '" "' . l:user_text . '"'
-  
-  " Add --check flag if user_text starts with '-' or is empty
-  if l:user_text =~ '^-' || empty(l:user_text)
-    let l:cmd .= ' c --check'
-  endif
+  " Command to call the aoe refactorer or ask
+  let l:cmd = l:user_text =~ '?$' ? 'ask "' . l:user_text . '"' : 'aoe "' . l:user_text . '"'
   
   execute '!clear && ' . l:cmd
   edit!
 endfunction
 
 nnoremap <space> :call RefactorFile()<CR>
-nnoremap <leader><space> :!clear<CR>:w!<cr>:!agda2ts %<CR>
+
+
+
+
+nnoremap <leader>T :!clear<CR>:w!<cr>:!agda2ts %<CR>
+nnoremap <leader>K :!clear<CR>:w!<cr>:!agda2kind %<CR>
 
 
 " FormatOptions:
