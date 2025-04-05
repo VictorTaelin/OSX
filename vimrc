@@ -112,22 +112,24 @@ let g:ctrlp_by_filename = 0
 
 :nnoremap <expr> r ':<C-u>!clear<cr>:w!<cr>'.(
     \ &ft=='agda'       ? ':call AgdaCheck()<cr>' :
-    \ &ft=='bend'       ? ':!/usr/bin/time bend run-c % -s<cr>' :
-    \ &ft=='c'          ? ':!clang % -o %:r -lSDL2<cr>:!time ./%:r<cr>' :
-    \ &ft=='cpp'        ? ':!clang++ -std=c++11 -O3 % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='bend'       ? ':!/usr/bin/time bend run-rs % -s<cr>' :
+    "\ &ft=='c'          ? ':!clang % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='c'          ? ':call RunCFile(0)<cr>' :
     \ &ft=='cuda'       ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/hvm.cu<CR>:!echo "Compiling..."; ssh taelin@HOC /usr/local/cuda-12.4/bin/nvcc -w -O3 /home/taelin/cuda/hvm.cu -o /home/taelin/cuda/hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/cuda/hvm<cr>' :
     "\ &ft=='haskell'    ? ':!time runghc --ghc-arg=-freverse-errors %<cr>' :
     \ &ft=='haskell'    ? ':call RunHaskellFile()<cr>' :
     \ &ft=='absal'      ? ':!/usr/bin/time absal %<cr>' :
-    \ &ft=='hvm'        ? ':!/usr/bin/time hvm run-c %<cr>' :
-    "\ &ft=='hvml'       ? ':!/usr/bin/time hvml run % -C -s<cr>' :
-    \ &ft=='hvml'       ? ':!/usr/bin/time cabal run hvml --project-dir=/Users/v/vic/dev/HVM3 -- run % -C -s<cr>' :
+    "\ &ft=='hvm3'       ? ':!/usr/bin/time hvm3 run % -C -s<cr>' :
+    \ &ft=='ic'         ? ':!/usr/bin/time ic run %<cr>' :
+    \ &ft=='hvmn'       ? ':!/usr/bin/time hvmn run %<cr>' :
+    \ &ft=='hvm'        ? ':!/usr/bin/time cabal run -v0 hvm --project-dir=/Users/v/vic/dev/HVM -- run % -C -s<cr>' :
     \ &ft=='hvms'       ? ':!/usr/bin/time hvms run % -s<cr>' :
     \ &ft=='hvm1'       ? ':!/usr/bin/time -l -h hvm1 run -t 1 -c -f % "(Main)"<cr>' :
     \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc run % -s -m 32G<cr>' :
+    \ &ft=='supgen'     ? ':!/usr/bin/time /Users/v/vic/dev/superposed_enumerator/supgen.sh gen % -c -C -Q<cr>' :
     \ &ft=='icc'        ? ':!/usr/bin/time icc check %:r<cr>' :
     \ &ft=='idris2'     ? ':!time idris2 % -o %:r<cr>:!time ./build/exec/%:r<cr>' :
-    \ &ft=='javascript' ? ':!time node %<cr>' :
+    \ &ft=='javascript' ? ':!time node --no-deprecation %<cr>' :
     \ &ft=='kind'       ? ':!time kind check %<cr>' :
     \ &ft=='kindc'      ? ':!time kindc check %<cr>' :
     \ &ft=='kind2'      ? ':!/usr/bin/time kind2 check ' . substitute(substitute(expand("%"), ".kind2", "", "g"), "/_", "", "g") . '<cr>' :
@@ -144,16 +146,21 @@ let g:ctrlp_by_filename = 0
 
 :nnoremap <expr> R ':<C-u>!clear<cr>:w!<cr>'.(
     \ &ft=='agda'       ? ':!agda-compile %<cr>:!time ./%:r<cr>' :
-    \ &ft=='bend'       ? ':!bend gen-hvm % > %:r.hvm<cr>' :
-    \ &ft=='c'          ? ':!clang -O3 % -o %:r<cr>:!time ./%:r<cr>' :
+    \ &ft=='bend'       ? ':!/usr/bin/time bend run-c % -s<cr>' :
+    "\ &ft=='bend'       ? ':!bend gen-hvm % > %:r.hvm<cr>' :
+    \ &ft=='c'          ? ':call RunCFile(1)<cr>' :
     \ &ft=='cpp'        ? ':!clang++ -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='cuda'       ? ':!rm %:r; nvcc -O3 % -o %:r<cr>:!time ./%:r<cr>' :
     \ &ft=='haskell'    ? ':!time ghc -O2 % -o .tmp; time ./.tmp 0; rm %:r.hi %:r.o .tmp<cr>' :
-    \ &ft=='hvm'        ? ':!hvm gen-c % > %:r.c; hvm gen-cu % > %:r.cu<cr>' :
-    \ &ft=='hvml'       ? ':!/usr/bin/time hvml run % -c -S -s<cr>' :
+    \ &ft=='ic'         ? ':!/usr/bin/time ic run % -C<cr>' :
+    \ &ft=='hvmn'       ? ':!/usr/bin/time hvmn run % -c<cr>' :
+    "\ &ft=='hvm'        ? ':!hvm gen-c % > %:r.c; hvm gen-cu % > %:r.cu<cr>' :
+    \ &ft=='hvm'        ? ':!/usr/bin/time hvm run % -c -C1 -s<cr>' :
+    \ &ft=='hvm3'       ? ':!/usr/bin/time hvm3 run % -c -C1 -s<cr>' :
     \ &ft=='hvms'       ? ':!/usr/bin/time hvms run % -c -s<cr>' :
     \ &ft=='hvm1'       ? ':!hvm1 compile %; cd %:r1; cargo build --release; /usr/bin/time -l -h ./target/release/%:r run -c true "(Main)"<cr>' :
     \ &ft=='hvmc'       ? ':!/usr/bin/time hvmc compile %; time ./%:r -s<cr>' :
+    \ &ft=='supgen'     ? ':!/usr/bin/time /Users/v/vic/dev/superposed_enumerator/supgen.sh gen % -c -C1 -Q -s<cr>' :
     \ &ft=='icc'        ? ':!/usr/bin/time icc run %:r<cr>' :
     \ &ft=='idris2'     ? ':!idris2 % -o %:r<cr>:!time ./build/exec/%:r<cr>' :
     \ &ft=='javascript' ? ':!time bun %<cr>' :
@@ -169,10 +176,13 @@ let g:ctrlp_by_filename = 0
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> <leader>r ':<C-u>!clear<cr>:w!<cr>'.(
-    \ &ft=='hvml' ? ':!/usr/bin/time hvml run % -s<cr>' :
-    \ &ft=='hvm'  ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/cuda/main.hvm -s<cr>' :
-    \ &ft=='bend' ? ':!echo "Sending to Higher Order Computer."; bend gen-hvm % > %:r.hvm  2>/dev/null; rsync %:r.hvm taelin@HOC:/home/taelin/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/main.hvm<cr>' :
-    \ &ft=='kind' ? ':!kind to-js %:r \| prettier --parser babel > %:r.js<cr>' :
+    \ &ft=='hvm'    ? ':!/usr/bin/time hvm run % -s<cr>' :
+    "\ &ft=='hvm'    ? ':!echo "Sending to Higher Order Computer."; rsync % taelin@HOC:/home/taelin/cuda/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/cuda/main.hvm -s<cr>' :
+    \ &ft=='ic'     ? ':!/usr/bin/time ic bench %<cr>' :
+    \ &ft=='hvmn'   ? ':!/usr/bin/time hvmn bench %<cr>' :
+    \ &ft=='supgen' ? ':!/usr/bin/time /Users/v/vic/dev/superposed_enumerator/supgen.sh chk % -c -C1 -Q<cr>' :
+    \ &ft=='bend'   ? ':!echo "Sending to Higher Order Computer."; bend gen-hvm % > %:r.hvm  2>/dev/null; rsync %:r.hvm taelin@HOC:/home/taelin/main.hvm<CR>:!echo "Running..."; ssh taelin@HOC time /home/taelin/.cargo/bin/hvm run-cu /home/taelin/main.hvm<cr>' :
+    \ &ft=='kind'   ? ':!kind to-js %:r \| prettier --parser babel > %:r.js<cr>' :
     \ ':!time cc %<cr>')
 
 :nnoremap <expr> <leader>m ':w!<cr>:!clear; ' . (
@@ -183,10 +193,31 @@ let g:ctrlp_by_filename = 0
     \ 'echo "No build command defined for this filetype"'
     \ ) . '<cr>'
 
+" TODO: create a RunCFile function that will be triggered when I'm in a C file.
+" if there is a Makefile locally, we'll make, and then run the binary on bin/
+" otherwise, we do the same as we do now
+" it must work for both r and R (i.e., it must receive a flag to enalbe -O3)
+" NOTE: the bin name will ALWAYS be 'main'. i.e., you must run bin/main
+" implement it below:
+
+function! RunCFile(optimize)
+  let l:src = expand('%')
+  let l:bin = expand('%:r')
+  if filereadable('Makefile') || filereadable('makefile')
+    execute '!rm -rf obj/ && clear && make clean && make && time ./bin/main'
+  else
+    if a:optimize
+      execute '!clear && clang -O3 ' . l:src . ' -o ' . l:bin . ' && time ./' . l:bin
+    else
+      execute '!clear && clang ' . l:src . ' -o ' . l:bin . ' && time ./' . l:bin
+    endif
+  endif
+endfunction
+
 function! RunTypeScriptFile()
   let l:tsconfig_exists = filereadable('tsconfig.json')
   if l:tsconfig_exists
-    execute '!clear && tsc --target esnext --noEmit --skipLibCheck % && time bun run %'
+    execute '!clear && tsc --target esnext --noEmit --skipLibCheck && time bun run %'
   else
     execute '!clear && tsc --target esnext --noEmit --skipLibCheck % && time bun run %'
   endif
@@ -202,8 +233,8 @@ function! RunHaskellFile()
     "-- TODO: if HVMS is in this dir's name, run 'cabal run hvms'
     "-- otherwise, run just 'cabal run'
     let l:dir_name = expand('%:p:h')
-    if l:dir_name =~ 'HVML'
-      execute '!clear && time cabal run hvml -- +RTS -N -RTS'
+    if l:dir_name =~ 'HVM'
+      execute '!clear && time cabal run hvm -- +RTS -N -RTS'
     elseif l:dir_name =~ 'HVMS'
       execute '!clear && time cabal run hvms -- +RTS -N -RTS'
     else
@@ -267,17 +298,23 @@ function! FillHoles(model)
   exec 'edit!'
 endfunction
 
-nnoremap <leader>o :!clear<CR>:call FillHoles('om')<CR>
-nnoremap <leader>O :!clear<CR>:call FillHoles('o')<CR>
+nnoremap <leader>o :!clear<CR>:call FillHoles('o')<CR>
+nnoremap <leader>O :!clear<CR>:call FillHoles('O')<CR>
 nnoremap <leader>g :!clear<CR>:call FillHoles('g')<CR>
-nnoremap <leader>G :!clear<CR>:call FillHoles('gm')<CR>
-nnoremap <leader>k :!clear<CR>:call FillHoles('d')<CR>
-nnoremap <leader>h :!clear<CR>:call FillHoles('c')<CR>
-nnoremap <leader>H :!clear<CR>:call FillHoles('C')<CR>
+nnoremap <leader>G :!clear<CR>:call FillHoles('G')<CR>
 nnoremap <leader>l :!clear<CR>:call FillHoles('l')<CR>
 nnoremap <leader>L :!clear<CR>:call FillHoles('L')<CR>
 nnoremap <leader>i :!clear<CR>:call FillHoles('i')<CR>
 nnoremap <leader>I :!clear<CR>:call FillHoles('I')<CR>
+nnoremap <leader>x :!clear<CR>:call FillHoles('x')<CR>
+nnoremap <leader>X :!clear<CR>:call FillHoles('X')<CR>
+"<leader>d is taken
+nnoremap <leader>k :!clear<CR>:call FillHoles('d')<CR>
+nnoremap <leader>K :!clear<CR>:call FillHoles('D')<CR>
+"<leader>c is taken
+nnoremap <leader>h :!clear<CR>:call FillHoles('c')<CR>
+nnoremap <leader>H :!clear<CR>:call FillHoles('C')<CR>
+
 ":nmap z :!clear<CR>:call FillHoles('h')<CR>
 "nnoremap <space> :!clear<CR>:call FillHoles('h')<CR>
 
@@ -445,13 +482,12 @@ au BufNewFile,BufRead *.escoc set filetype=escoc
 au BufNewFile,BufRead *.escoc set syntax=javascript
 au BufNewFile,BufRead *.itt set filetype=itt
 au BufNewFile,BufRead *.sic set filetype=sic
-au BufNewFile,BufRead *.ic set filetype=ic
 au BufNewFile,BufRead *.moon set syntax=javascript
 au BufNewFile,BufRead *.mt set filetype=morte
 au BufNewFile,BufRead *.sw set filetype=sway
 au BufNewFile,BufRead *.sw set syntax=rust
 "au BufNewFile,BufRead *.idr set filetype=idris
-au BufNewFile,BufRead *.lean set filetype=lean
+au BufNewFile,BufRead *.lean set filetype=agda
 au BufNewFile,BufRead *.v set filetype=coq
 au BufNewFile,BufRead *.coc set filetype=coc
 au BufNewFile,BufRead *.ult set filetype=ultimate
@@ -499,6 +535,14 @@ au BufNewFile,BufRead *.kdl set filetype=kindelia
 au BufNewFile,BufRead *.kdl set syntax=javascript
 au BufNewFile,BufRead *.bolt set filetype=lambolt
 au BufNewFile,BufRead *.bolt set syntax=javascript
+au BufNewFile,BufRead *.ic set filetype=ic
+au BufNewFile,BufRead *.ic set syntax=javascript
+au BufNewFile,BufRead *.ic syntax region Password start=/^\/\/\~/ end=/$/ " ic hidden comments
+au BufNewFile,BufRead *.ic highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.hvmn set filetype=hvmn
+au BufNewFile,BufRead *.hvmn set syntax=javascript
+au BufNewFile,BufRead *.hvmn syntax region Password start=/^\/\/\~/ end=/$/ " hvmn hidden comments
+au BufNewFile,BufRead *.hvmn highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.hvm set filetype=hvm
 au BufNewFile,BufRead *.hvm set syntax=javascript
 au BufNewFile,BufRead *.hvm syntax region Password start=/^\/\/\~/ end=/$/ " HVM hidden comments
@@ -509,10 +553,10 @@ au BufNewFile,BufRead *.hvm1 syntax region Password start=/^\/\/\~/ end=/$/ " HV
 au BufNewFile,BufRead *.hvm1 highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.hvmc set filetype=hvmc
 au BufNewFile,BufRead *.hvmc set syntax=javascript
-au BufNewFile,BufRead *.hvml set filetype=hvml
-au BufNewFile,BufRead *.hvml set syntax=javascript
-au BufNewFile,BufRead *.hvml syntax region Password start=/^\/\/\~/ end=/$/ " hvml hidden comments
-au BufNewFile,BufRead *.hvml highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.hvm3 set filetype=hvm3
+au BufNewFile,BufRead *.hvm3 set syntax=javascript
+au BufNewFile,BufRead *.hvm3 syntax region Password start=/^\/\/\~/ end=/$/ " hvm3 hidden comments
+au BufNewFile,BufRead *.hvm3 highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.hvms set filetype=hvms
 au BufNewFile,BufRead *.hvms set syntax=javascript
 au BufNewFile,BufRead *.hvms syntax region Password start=/^\/\/\~/ end=/$/ " hvms hidden comments
@@ -521,6 +565,10 @@ au BufNewFile,BufRead *.hvm2 set filetype=hvm2
 au BufNewFile,BufRead *.hvm2 set syntax=javascript
 au BufNewFile,BufRead *.hvm2 syntax region Password start=/^\/\/\~/ end=/$/ " hvm2 hidden comments
 au BufNewFile,BufRead *.hvm2 highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
+au BufNewFile,BufRead *.sg set filetype=supgen
+au BufNewFile,BufRead *.sg set syntax=javascript
+au BufNewFile,BufRead *.sg syntax region Password start=/^\/\/\~/ end=/$/ " supgen hidden comments
+au BufNewFile,BufRead *.sg highlight Password ctermfg=red guifg=red ctermbg=red guifg=red
 au BufNewFile,BufRead *.absal set filetype=absal
 au BufNewFile,BufRead *.absal set syntax=javascript
 au BufNewFile,BufRead *.absal syntax region Password start=/^\/\/\~/ end=/$/ " absal hidden comments
@@ -531,6 +579,7 @@ au BufNewFile,BufRead *.icc set filetype=icc
 au BufNewFile,BufRead *.icc set syntax=javascript
 au BufNewFile,BufRead *.pwd set syntax=javascript
 au BufNewFile,BufRead *.pvt set syntax=javascript
+au BufNewFile,BufRead *.h set filetype=c
 
 " EVERYTHING MANAGER
 au BufNewFile,BufRead *.pvt set filetype=javascript
@@ -784,8 +833,8 @@ nnoremap <space> :call RefactorFile()<CR>
 
 
 
-nnoremap <leader>T :!clear<CR>:w!<cr>:!agda2ts %<CR>
-nnoremap <leader>K :!clear<CR>:w!<cr>:!agda2kind %<CR>
+"nnoremap <leader>T :!clear<CR>:w!<cr>:!agda2ts %<CR>
+"nnoremap <leader>K :!clear<CR>:w!<cr>:!agda2kind %<CR>
 
 
 " FormatOptions:
